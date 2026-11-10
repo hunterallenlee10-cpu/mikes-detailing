@@ -79,13 +79,26 @@ export function Nav() {
           scrolled || open ? "glass shadow-[0_20px_50px_-20px_rgb(0_0_0/0.9)] ring-1 ring-white/10" : "ring-1 ring-transparent",
         )}
       >
-        <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label={`${business.name} — home`}>
+        <Link
+          href="/"
+          className="flex shrink-0 items-center gap-2.5"
+          aria-label={`${business.name} — back to top`}
+          onClick={(e) => {
+            // Already on the home page: glide back to the top instead of doing nothing.
+            if (pathname !== "/" || e.metaKey || e.ctrlKey || e.shiftKey) return;
+            e.preventDefault();
+            if (location.hash) history.replaceState(null, "", "/");
+            const lenis = (window as unknown as { __lenis?: { scrollTo: (t: number, o?: object) => void } }).__lenis;
+            if (lenis) lenis.scrollTo(0, { duration: 1.2 });
+            else window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+          }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/logo-320.webp" alt="" width={320} height={239} className="h-12 w-auto sm:h-14" />
           <span className="sr-only">{business.name}</span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
+        <nav aria-label="Main" className="hidden items-center gap-0.5 rounded-full bg-black/70 p-1.5 shadow-[0_10px_30px_-10px_rgb(0_0_0/0.9)] ring-1 ring-white/15 backdrop-blur-md lg:flex">
           <div
             className="relative"
             ref={megaRef}
@@ -101,9 +114,9 @@ export function Nav() {
               aria-controls="mega-menu"
               ref={megaBtn}
               onClick={clickMega}
-              className="flex items-center gap-1 rounded-full px-4 py-2.5 text-sm font-bold text-white/85 hover:text-white"
+              className={cn("flex items-center gap-1.5 rounded-full px-5 py-2.5 text-base font-extrabold tracking-wide text-white transition-colors hover:bg-white/10", mega && "bg-white/10")}
             >
-              Services <ChevronIcon size={16} className={cn("transition-transform", mega && "rotate-180")} />
+              Services <ChevronIcon size={18} className={cn("text-red-text transition-transform", mega && "rotate-180")} />
             </button>
             <div
               id="mega-menu"
@@ -140,7 +153,7 @@ export function Nav() {
               key={n.href}
               href={n.href}
               aria-current={pathname === n.href ? "page" : undefined}
-              className="rounded-full px-4 py-2.5 text-sm font-bold text-white/85 hover:text-white aria-[current=page]:text-white aria-[current=page]:underline aria-[current=page]:decoration-red aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8"
+              className="rounded-full px-5 py-2.5 text-base font-extrabold tracking-wide text-white transition-colors hover:bg-white/10 aria-[current=page]:bg-red aria-[current=page]:text-white"
             >
               {n.label}
             </Link>

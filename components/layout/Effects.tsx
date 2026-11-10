@@ -26,6 +26,7 @@ export function Effects() {
       if (cancelled) return;
       const lenis = new Lenis({ duration: 1.1, anchors: { offset: -90 }, autoRaf: false });
       lenisRef.current = lenis;
+      (window as unknown as { __lenis?: typeof lenis }).__lenis = lenis; // lets the logo scroll to top smoothly
       const loop = (t: number) => {
         lenis.raf(t);
         raf = requestAnimationFrame(loop);
@@ -37,6 +38,7 @@ export function Effects() {
       cancelAnimationFrame(raf);
       lenisRef.current?.destroy();
       lenisRef.current = null;
+      delete (window as unknown as { __lenis?: unknown }).__lenis;
     };
   }, []);
 
