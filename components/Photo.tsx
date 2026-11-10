@@ -1,4 +1,5 @@
 import { getImageProps, type ImageLoader } from "next/image";
+import { preload } from "react-dom";
 import { PHOTOS, type PhotoSlug } from "@/content/images.generated";
 import { cn } from "@/lib/cn";
 
@@ -41,6 +42,11 @@ export function Photo({ slug, alt, sizes, className, imgClassName, eager, positi
   };
   const avif = getImageProps({ ...common, src: `/${slug}.avif`, loader: loaderFor(slug, "avif") }).props;
   const { props: webp } = getImageProps({ ...common, src: `/${slug}.webp`, loader: loaderFor(slug, "webp") });
+
+  // Above-the-fold photos: tell the browser about the AVIF right away (in <head>).
+  if (eager && avif.srcSet) {
+    preload(avif.src, { as: "image", type: "image/avif", imageSrcSet: avif.srcSet, imageSizes: avif.sizes, fetchPriority: "high" });
+  }
 
   return (
     <picture
