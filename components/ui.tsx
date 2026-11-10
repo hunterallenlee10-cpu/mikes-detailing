@@ -90,7 +90,7 @@ export function SectionHead({
   eyebrowClass?: string;
 }) {
   return (
-    <div className={cn("max-w-3xl", align === "center" && "mx-auto text-center", className)} data-reveal>
+    <div className={cn("max-w-3xl", align === "center" && "mx-auto text-center", className)} data-reveal={As === "h1" ? undefined : true}>
       <p className={cn("eyebrow mb-4 flex items-center gap-3", align === "center" && "justify-center", eyebrowClass)}>
         <span aria-hidden className="inline-block h-[3px] w-6 rounded bg-current" />
         {eyebrow}

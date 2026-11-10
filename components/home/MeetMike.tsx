@@ -3,6 +3,8 @@ import { Photo } from "../Photo";
 import { CallTextButtons, Container, SectionHead } from "../ui";
 
 export function MeetMike({ headingAs = "h2" }: { headingAs?: "h1" | "h2" }) {
+  const hero = headingAs === "h1";
+  const rv = hero ? {} : { "data-reveal": true };
   const stats = [
     { k: `Est. ${business.established}`, v: "Full time, all in" },
     { k: business.stats.detailsCompleted, v: "Details completed" },
@@ -14,8 +16,8 @@ export function MeetMike({ headingAs = "h2" }: { headingAs?: "h1" | "h2" }) {
       <div aria-hidden className="absolute inset-0 bg-[radial-gradient(50%_60%_at_85%_40%,rgb(227_25_31/0.12),transparent_70%)]" />
       <Container className="relative grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
         <div className="relative grid grid-cols-[1.15fr_1fr] gap-4">
-          <div className="relative row-span-2 aspect-[434/646] overflow-hidden rounded-[2rem] ring-1 ring-white/15" data-reveal>
-            <Photo slug="mike-polisher-c8" alt="Mike Tippett with a polisher next to a black C8 Corvette" sizes="(min-width: 1024px) 26vw, 52vw" position="50% 30%" />
+          <div className="relative row-span-2 aspect-[434/646] overflow-hidden rounded-[2rem] ring-1 ring-white/15" {...rv}>
+            <Photo slug="mike-polisher-c8" alt="Mike Tippett with a polisher next to a black C8 Corvette" sizes="(min-width: 1024px) 26vw, 52vw" position="50% 30%" eager={hero} />
           </div>
           <div className="relative mt-10 aspect-[4/5] overflow-hidden rounded-[2rem] ring-1 ring-white/15" data-reveal data-reveal-delay="140">
             <Photo slug="mike-pressure-wash" alt="Mike pressure-washing a customer's car in his Mike's Automotive Detailing IGL shirt" sizes="(min-width: 1024px) 22vw, 44vw" position="45% 50%" />
@@ -39,7 +41,7 @@ export function MeetMike({ headingAs = "h2" }: { headingAs?: "h1" | "h2" }) {
               </span>
             }
           />
-          <div className="mt-6 grid gap-4 text-lg leading-relaxed text-chrome/90" data-reveal>
+          <div className="mt-6 grid gap-4 text-lg leading-relaxed text-chrome/90" {...rv}>
             <p>
               I started {business.name} in {business.established} and I run it full time. A thousand-plus details later, we just opened our own shop on Point Lookout Rd in Leonardtown — hex lights, the whole thing.
             </p>

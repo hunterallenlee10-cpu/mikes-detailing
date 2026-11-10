@@ -25,7 +25,7 @@ export function QuoteSection({ initialServices, title, headingAs = "h2" }: { ini
             }
             lead="Tell us about the ride. Mike gets back to you personally — usually by text."
           />
-          <ul className="mt-8 grid gap-2" data-reveal>
+          <ul className="mt-8 grid gap-2" data-reveal={headingAs === "h1" ? undefined : true}>
             {rows.map(({ href, label, value, Icon, track }) => (
               <li key={label}>
                 <a

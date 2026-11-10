@@ -95,7 +95,7 @@ export function CeilingBackdrop({ seed = 7, flickerOut = false, baseDelay = 120,
       style={{ maskImage: "linear-gradient(180deg,#000 8%,rgb(0 0 0/.45) 42%,transparent 88%)", WebkitMaskImage: "linear-gradient(180deg,#000 8%,rgb(0 0 0/.45) 42%,transparent 88%)" }}
     >
       <div className="absolute top-0 left-1/2 w-[190%] origin-top [transform:translateX(-50%)_rotateX(52deg)] sm:w-[150%] lg:w-[125%]">
-        <HexCeiling className="h-auto w-full opacity-70" cols={19} rows={7} r={40} seed={seed} flickerOut={flickerOut} baseDelay={baseDelay} />
+        <HexCeiling className="h-auto w-full opacity-70" cols={15} rows={6} r={46} seed={seed} flickerOut={flickerOut} baseDelay={baseDelay} />
       </div>
       <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_0%,rgb(200_215_255/0.16),transparent_70%)]" />
     </div>

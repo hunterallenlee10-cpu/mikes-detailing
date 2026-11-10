@@ -231,9 +231,9 @@ export function QuoteBuilder({ initialServices = [] }: { initialServices?: strin
               exit={{ opacity: 0, x: dir * -40 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
-              <h3 id={`${id}-h`} ref={headingRef} tabIndex={-1} className="text-2xl font-black text-white uppercase outline-none sm:text-3xl">
+              <h2 id={`${id}-h`} ref={headingRef} tabIndex={-1} className="text-2xl font-black text-white uppercase outline-none sm:text-3xl">
                 {["What are we working on?", "What does it need?", "How's it looking?", "How should Mike reach you?"][step]}
-              </h3>
+              </h2>
 
               {step === 0 && (
                 <div className="mt-6 grid gap-6">
