@@ -33,7 +33,7 @@ export function Reviews({ ids, title, compact, headingAs = "h2" }: { ids?: strin
               </span>
             }
           />
-          <div className="flex flex-wrap gap-3" data-reveal>
+          <div className="flex flex-wrap gap-3" data-reveal={headingAs === "h1" ? undefined : true}>
             <a href={links.googleReviews} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 rounded-2xl bg-carbon px-5 py-4 ring-1 ring-white/10 hover:ring-white/30" data-track="reviews_google">
               <span className="font-wide text-3xl font-black text-white">{ratings.google.rating.toFixed(1)}</span>
               <span>
@@ -56,7 +56,7 @@ export function Reviews({ ids, title, compact, headingAs = "h2" }: { ids?: strin
         </div>
         <ul className={cn("mt-12 gap-4", compact ? "grid md:grid-cols-2 lg:grid-cols-3" : "columns-1 sm:columns-2 lg:columns-3 [&>li]:mb-4")}>
           {list.map((r, i) => (
-            <li key={r.id} className="break-inside-avoid" data-reveal data-reveal-delay={(i % 3) * 90}>
+            <li key={r.id} className="break-inside-avoid" data-reveal={headingAs === "h1" && i < 6 ? undefined : true} data-reveal-delay={(i % 3) * 90}>
               <ReviewCard r={r} />
             </li>
           ))}

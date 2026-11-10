@@ -17,7 +17,7 @@ function Art({ item }: { item: GalleryItem }) {
 
 export function Gallery({ limit, filterable = true }: { limit?: number; filterable?: boolean }) {
   const items = limit ? gallery.slice(0, limit) : gallery;
-  const tiles: Tile[] = items.map((g) => {
+  const tiles: Tile[] = items.map((g, i) => {
     const tall = g.photo ? PHOTOS[g.photo].height > PHOTOS[g.photo].width : false;
     return {
       key: g.title,
@@ -25,8 +25,8 @@ export function Gallery({ limit, filterable = true }: { limit?: number; filterab
       caption: g.caption,
       categories: g.categories,
       tall,
-      thumb: g.photo ? <Photo slug={g.photo} alt={g.alt} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw" /> : <Art item={g} />,
-      large: g.photo ? (
+      thumb: g.photo ? <Photo slug={g.photo} alt={g.alt} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw" eager={filterable && i < 2} /> : <Art item={g} />,
+      large: !filterable ? null : g.photo ? (
         <Photo slug={g.photo} alt={g.alt} sizes="(min-width: 1024px) 1000px, 96vw" imgClassName="!object-contain" className="!bg-jet" />
       ) : (
         <Art item={g} />
