@@ -76,7 +76,6 @@ export const links = {
   mapsListing: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     "Mike's Automotive Detailing 26005 Point Lookout Rd Leonardtown MD 20650",
   )}`,
-  mapEmbed: `https://www.google.com/maps?q=${encodeURIComponent("26005 Point Lookout Rd, Leonardtown, MD 20650")}&z=15&output=embed`,
   googleReviews: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     "Mike's Automotive Detailing Leonardtown MD reviews",
   )}`, // [CONFIRM] swap for his exact Google review link (g.page/r/…)

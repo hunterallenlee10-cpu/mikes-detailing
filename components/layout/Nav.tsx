@@ -15,6 +15,32 @@ export function Nav() {
   const [mega, setMega] = useState(false);
   const pathname = usePathname();
   const megaRef = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverOpenedAt = useRef(0);
+  const megaBtn = useRef<HTMLButtonElement>(null);
+
+  // Hover intent: open right away, close after a short pause so the cursor can cross the gap.
+  const openMega = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (!mega) hoverOpenedAt.current = Date.now();
+    setMega(true);
+  };
+  // A click right after hover-opening shouldn't snap it shut; otherwise click toggles.
+  const clickMega = () => setMega((v) => (Date.now() - hoverOpenedAt.current < 700 ? true : !v));
+  const closeMegaSoon = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setMega(false), 160);
+  };
+
+  // Close the Services menu on an outside click/tap.
+  useEffect(() => {
+    if (!mega) return;
+    const onDown = (e: PointerEvent) => {
+      if (!megaRef.current?.contains(e.target as Node)) setMega(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [mega]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -35,7 +61,10 @@ export function Nav() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setOpen(false);
-        setMega(false);
+        setMega((wasOpen) => {
+          if (wasOpen && megaRef.current?.contains(document.activeElement)) megaBtn.current?.focus();
+          return false;
+        });
       }
     };
     window.addEventListener("keydown", onKey);
@@ -50,22 +79,44 @@ export function Nav() {
           scrolled || open ? "glass shadow-[0_20px_50px_-20px_rgb(0_0_0/0.9)] ring-1 ring-white/10" : "ring-1 ring-transparent",
         )}
       >
-        <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label={`${business.name} — home`}>
+        <Link
+          href="/"
+          className="flex shrink-0 items-center gap-2.5"
+          aria-label={`${business.name} — back to top`}
+          onClick={(e) => {
+            // Already on the home page: glide back to the top instead of doing nothing.
+            if (pathname !== "/" || e.metaKey || e.ctrlKey || e.shiftKey) return;
+            e.preventDefault();
+            if (location.hash) history.replaceState(null, "", "/");
+            const lenis = (window as unknown as { __lenis?: { scrollTo: (t: number, o?: object) => void } }).__lenis;
+            if (lenis) lenis.scrollTo(0, { duration: 1.2 });
+            else window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+          }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/logo-320.webp" alt="" width={320} height={239} className="h-12 w-auto sm:h-14" />
           <span className="sr-only">{business.name}</span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
-          <div className="relative" onMouseEnter={() => setMega(true)} onMouseLeave={() => setMega(false)} ref={megaRef}>
+        <nav aria-label="Main" className="hidden items-center gap-0.5 rounded-full bg-black/70 p-1.5 shadow-[0_10px_30px_-10px_rgb(0_0_0/0.9)] ring-1 ring-white/15 backdrop-blur-md lg:flex">
+          <div
+            className="relative"
+            ref={megaRef}
+            onMouseEnter={openMega}
+            onMouseLeave={closeMegaSoon}
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setMega(false);
+            }}
+          >
             <button
               type="button"
               aria-expanded={mega}
               aria-controls="mega-menu"
-              onClick={() => setMega((v) => !v)}
-              className="flex items-center gap-1 rounded-full px-4 py-2.5 text-sm font-bold text-white/85 hover:text-white"
+              ref={megaBtn}
+              onClick={clickMega}
+              className={cn("flex items-center gap-1.5 rounded-full px-5 py-2.5 text-base font-extrabold tracking-wide text-white transition-colors hover:bg-white/10", mega && "bg-white/10")}
             >
-              Services <ChevronIcon size={16} className={cn("transition-transform", mega && "rotate-180")} />
+              Services <ChevronIcon size={18} className={cn("text-red-text transition-transform", mega && "rotate-180")} />
             </button>
             <div
               id="mega-menu"
@@ -74,7 +125,7 @@ export function Nav() {
                 mega ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0",
               )}
             >
-              <div className="glass grid grid-cols-2 gap-1 rounded-2xl p-2 ring-1 ring-white/10">
+              <div className="grid grid-cols-2 gap-1 rounded-2xl bg-[#0e0e10] p-2 ring-1 ring-white/12 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.95),0_0_0_1px_rgb(0_0_0/0.6)]">
                 {serviceLinks.map((s) => (
                   <Link
                     key={s.href}
@@ -102,7 +153,7 @@ export function Nav() {
               key={n.href}
               href={n.href}
               aria-current={pathname === n.href ? "page" : undefined}
-              className="rounded-full px-4 py-2.5 text-sm font-bold text-white/85 hover:text-white aria-[current=page]:text-white aria-[current=page]:underline aria-[current=page]:decoration-red aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8"
+              className="rounded-full px-5 py-2.5 text-base font-extrabold tracking-wide text-white transition-colors hover:bg-white/10 aria-[current=page]:bg-red aria-[current=page]:text-white"
             >
               {n.label}
             </Link>
@@ -135,7 +186,7 @@ export function Nav() {
       <div
         id="mobile-menu"
         className={cn(
-          "pointer-events-auto glass fixed inset-x-3 top-[calc(env(safe-area-inset-top)+5.2rem)] bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] overflow-y-auto rounded-2xl p-5 ring-1 ring-white/10 transition-all duration-300 lg:hidden",
+          "pointer-events-auto fixed inset-x-3 bg-[#0e0e10] shadow-[0_30px_80px_-20px_rgb(0_0_0/0.95)] top-[calc(env(safe-area-inset-top)+5.2rem)] bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] overflow-y-auto rounded-2xl p-5 ring-1 ring-white/10 transition-all duration-300 lg:hidden",
           open ? "visible opacity-100" : "invisible -translate-y-3 opacity-0",
         )}
       >

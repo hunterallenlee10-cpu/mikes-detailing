@@ -86,9 +86,17 @@ How each Drive photo is used:
 | 13 | Shop hex lights | Home hero card, Visit the Shop, Audio page, gallery (straightened 11°) |
 | 14 | Grand opening flyer | Reference only — rebuilt as the native Specials component |
 
+### Shop map
+
+The map in "Visit the Shop" is a custom drawing, not a Google embed: `scripts/build-map.mjs` downloads the streets around the shop from OpenStreetMap (cached in the git-ignored `.osm/` folder) and writes `public/images/map/shop-map.svg` — dark ground, glowing roads, Point Lookout Rd (MD 5) lit up, the shop at the exact centre. The "Directions" button still opens Google Maps. To redraw it (e.g. after changing colours in the script):
+
+```bash
+npm run map
+```
+
 ## What's on the site
 
-- **Home:** hex-light power-on hero → certifications → live specials → 6 service cards → ceramic protection ladder with the water-beading demo → pinned 6-step process → recent work → reviews → Meet Mike → quote builder → Visit the Shop (live Open now/Closed in Eastern time, lazy map) → FAQ → "Because Detail Matters" CTA.
+- **Home:** hex-light power-on hero → certifications → live specials → 6 service cards → ceramic protection ladder with the water-beading demo → pinned 6-step process → recent work → reviews → Meet Mike → quote builder → Visit the Shop (live Open now/Closed in Eastern time, custom night map) → FAQ → "Because Detail Matters" CTA.
 - **Service pages:** `/auto-detailing`, `/ceramic-coating`, `/paint-correction`, `/lighting`, `/car-audio`, `/window-tint`, `/fleet` — each with hero, signature feature, what's included, who it's for, pricing, proof + matching reviews, FAQ (with FAQ schema), and a quote form pre-selected for that service.
 - `/gallery` (filter + lightbox), `/reviews`, `/about`, `/contact`, `/privacy`, and a 404 where the hex lights flicker out.
 - **SEO:** `AutomotiveBusiness` JSON-LD on every page (address, geo, hours, area served, socials, credentials, offer catalog), `FAQPage` and `BreadcrumbList` schema, per-page titles/descriptions/canonicals, `sitemap.xml`, `robots.txt`, `llms.txt`, Open Graph image, favicons. `aggregateRating` is only output once the Google review count is filled in `ratings.google.reviewCount`.
