@@ -34,8 +34,17 @@ export function GalleryGrid({
   useEffect(() => {
     const d = dialogRef.current;
     if (!d) return;
-    if (open !== null && !d.open) d.showModal();
+    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
+    if (open !== null && !d.open) {
+      d.showModal();
+      lenis?.stop();
+      document.documentElement.style.overflow = "hidden";
+    }
     if (open === null && d.open) d.close();
+    if (open === null) {
+      lenis?.start();
+      document.documentElement.style.overflow = "";
+    }
   }, [open]);
 
   useEffect(() => {
