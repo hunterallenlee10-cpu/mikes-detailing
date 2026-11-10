@@ -30,7 +30,6 @@
     background: var(--color-jet);
     color: var(--color-chrome);
     -webkit-tap-highlight-color: transparent;
-    scroll-padding-top: 6rem;
   }
   body {
     background: var(--color-jet);
@@ -253,6 +252,7 @@ html.lenis body {
     opacity: 1;
   }
   .js [data-reveal] {
+    opacity: 1;
     transform: none;
   }
 }

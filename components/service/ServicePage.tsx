@@ -86,7 +86,7 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
             <p className={cn("eyebrow fade-up mt-6", accentText[s.accent])} style={{ animationDelay: ".1s" }}>
               {s.eyebrow}
             </p>
-            <h1 id="svc-title" className="mt-4 text-[clamp(2.1rem,9vw,4.6rem)] leading-[0.95] font-black uppercase">
+            <h1 id="svc-title" className="mt-4 text-[clamp(2.1rem,9vw,4.6rem)] leading-[0.95] lg:text-[min(4.5vw,4rem)] font-black uppercase">
               <span className="reveal-line chrome" style={{ animationDelay: ".2s" }}>
                 {s.seo.h1.replace(/ in .*$/, "")}
               </span>
@@ -224,7 +224,7 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
                     <span className="block font-bold text-white">{p.label}</span>
                     {p.note && <span className="text-sm text-muted">{p.note}</span>}
                   </dt>
-                  <dd className={cn("font-wide max-w-[48%] text-right text-lg font-black sm:text-xl", p.value === "Quote" ? "text-chrome" : accentText[s.accent])}>{p.value}</dd>
+                  <dd className={cn("font-wide max-w-[55%] text-right text-base font-black sm:text-xl", p.value === "Quote" ? "text-chrome" : accentText[s.accent])}>{p.value}</dd>
                 </div>
               ))}
             </dl>

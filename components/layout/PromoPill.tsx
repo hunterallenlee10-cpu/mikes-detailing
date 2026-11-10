@@ -18,7 +18,7 @@ export function PromoPill() {
       dismissed = sessionStorage.getItem("promo-dismissed") ?? "";
     } catch {}
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPromo(active.find((p) => p.id !== dismissed) ?? null);
+    setPromo(dismissed ? null : (active[0] ?? null));
     const onScroll = () => setHidden(window.scrollY > 300);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);

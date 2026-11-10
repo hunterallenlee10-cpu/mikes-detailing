@@ -44,7 +44,7 @@ export function Hero() {
             <span aria-hidden className="inline-block h-[3px] w-6 rounded bg-current" />
             Leonardtown, MD · Est. {business.established}
           </p>
-          <h1 id="hero-title" className="mt-5 text-[clamp(2.2rem,9.6vw,3.4rem)] leading-[0.92] sm:text-[clamp(3rem,6.6vw,4.6rem)] xl:text-[5.2rem] font-black uppercase">
+          <h1 id="hero-title" className="mt-5 text-[clamp(2.2rem,9.6vw,3.4rem)] leading-[0.92] sm:text-[clamp(3rem,6.6vw,4.6rem)] lg:text-[min(5vw,5.2rem)] font-black uppercase">
             <span className="reveal-line chrome" style={{ animationDelay: "0.35s" }}>
               Southern Maryland&apos;s
             </span>

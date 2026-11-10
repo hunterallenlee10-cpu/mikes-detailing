@@ -1,7 +1,6 @@
 "use client";
 
 import { track } from "@vercel/analytics";
-import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 /**
@@ -12,7 +11,6 @@ import { useEffect, useRef } from "react";
  *  - analytics events for any element with data-track="…"
  */
 export function Effects() {
-  const pathname = usePathname();
   const lenisRef = useRef<{ scrollTo: (t: number | string | HTMLElement, o?: object) => void; destroy: () => void } | null>(null);
 
   // Smooth scroll
@@ -24,7 +22,7 @@ export function Effects() {
     let cancelled = false;
     import("lenis").then(({ default: Lenis }) => {
       if (cancelled) return;
-      const lenis = new Lenis({ duration: 1.1, anchors: { offset: -90 }, autoRaf: false });
+      const lenis = new Lenis({ duration: 1.1, anchors: true, autoRaf: false });
       lenisRef.current = lenis;
       (window as unknown as { __lenis?: typeof lenis }).__lenis = lenis; // lets the logo scroll to top smoothly
       const loop = (t: number) => {
@@ -42,30 +40,56 @@ export function Effects() {
     };
   }, []);
 
-  // Reveal on scroll (re-scan on every route)
+  // Reveal on scroll. Watches the DOM so sections added later (in-app navigation,
+  // streamed content, filters) are picked up too — nothing can get stuck invisible.
   useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-in)"));
-    if (!("IntersectionObserver" in window)) {
-      els.forEach((el) => el.classList.add("is-in"));
-      return;
+    const reveal = (el: HTMLElement) => {
+      el.style.transitionDelay = `${Number(el.dataset.revealDelay ?? 0)}ms`;
+      el.classList.add("is-in");
+    };
+    const all = () => Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-in)"));
+    if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      all().forEach(reveal);
+      const mo = new MutationObserver(() => all().forEach(reveal));
+      mo.observe(document.body, { childList: true, subtree: true });
+      return () => mo.disconnect();
     }
+    const watched = new WeakSet<Element>();
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
-          if (e.isIntersecting) {
-            const el = e.target as HTMLElement;
-            const delay = Number(el.dataset.revealDelay ?? 0);
-            el.style.transitionDelay = `${delay}ms`;
-            el.classList.add("is-in");
-            io.unobserve(el);
+          // Reveal when it scrolls into view — or if we've already jumped past it.
+          if (e.isIntersecting || e.boundingClientRect.bottom < 0) {
+            reveal(e.target as HTMLElement);
+            io.unobserve(e.target);
           }
         }
       },
       { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
     );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, [pathname]);
+    const scan = () => {
+      for (const el of all()) {
+        if (watched.has(el)) continue;
+        watched.add(el);
+        io.observe(el);
+      }
+    };
+    scan();
+    let queued = false;
+    const mo = new MutationObserver(() => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        scan();
+      });
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+    };
+  }, []);
 
   // Analytics click events
   useEffect(() => {

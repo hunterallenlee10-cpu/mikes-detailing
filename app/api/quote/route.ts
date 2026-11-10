@@ -71,7 +71,7 @@ export async function POST(request: Request) {
   if (total > MAX_TOTAL_BYTES || files.some((f) => !f.type.startsWith("image/"))) return json({ ok: false, reason: "invalid_photos" }, 400);
 
   const key = process.env.RESEND_API_KEY;
-  if (!key) return json({ ok: false, reason: "not_configured" }, 503);
+  if (!key) return json({ ok: false, reason: "not_configured" }); // form shows the text-message fallback
 
   const vehicle = [q.year, q.make, q.model].filter(Boolean).join(" ");
   const rows: [string, string][] = [

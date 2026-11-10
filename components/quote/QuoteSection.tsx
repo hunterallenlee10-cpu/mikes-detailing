@@ -11,7 +11,7 @@ export function QuoteSection({ initialServices, title, headingAs = "h2" }: { ini
     ...(business.bookingUrl ? [{ href: business.bookingUrl, label: "Book online", value: "Pick a time", Icon: CalendarIcon, track: "book_online" }] : []),
   ];
   return (
-    <section id="quote" className="relative scroll-mt-24 overflow-hidden py-24 sm:py-32" aria-labelledby="quote-title">
+    <section id="quote" className="relative overflow-hidden py-24 sm:py-32" aria-labelledby="quote-title">
       <div aria-hidden className="absolute inset-0 bg-[radial-gradient(60%_50%_at_10%_30%,rgb(227_25_31/0.14),transparent_70%)]" />
       <Container className="relative grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-14">
         <div>
