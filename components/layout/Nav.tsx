@@ -15,6 +15,32 @@ export function Nav() {
   const [mega, setMega] = useState(false);
   const pathname = usePathname();
   const megaRef = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverOpenedAt = useRef(0);
+  const megaBtn = useRef<HTMLButtonElement>(null);
+
+  // Hover intent: open right away, close after a short pause so the cursor can cross the gap.
+  const openMega = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (!mega) hoverOpenedAt.current = Date.now();
+    setMega(true);
+  };
+  // A click right after hover-opening shouldn't snap it shut; otherwise click toggles.
+  const clickMega = () => setMega((v) => (Date.now() - hoverOpenedAt.current < 700 ? true : !v));
+  const closeMegaSoon = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setMega(false), 160);
+  };
+
+  // Close the Services menu on an outside click/tap.
+  useEffect(() => {
+    if (!mega) return;
+    const onDown = (e: PointerEvent) => {
+      if (!megaRef.current?.contains(e.target as Node)) setMega(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [mega]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -35,7 +61,10 @@ export function Nav() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setOpen(false);
-        setMega(false);
+        setMega((wasOpen) => {
+          if (wasOpen && megaRef.current?.contains(document.activeElement)) megaBtn.current?.focus();
+          return false;
+        });
       }
     };
     window.addEventListener("keydown", onKey);
@@ -57,12 +86,21 @@ export function Nav() {
         </Link>
 
         <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
-          <div className="relative" onMouseEnter={() => setMega(true)} onMouseLeave={() => setMega(false)} ref={megaRef}>
+          <div
+            className="relative"
+            ref={megaRef}
+            onMouseEnter={openMega}
+            onMouseLeave={closeMegaSoon}
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setMega(false);
+            }}
+          >
             <button
               type="button"
               aria-expanded={mega}
               aria-controls="mega-menu"
-              onClick={() => setMega((v) => !v)}
+              ref={megaBtn}
+              onClick={clickMega}
               className="flex items-center gap-1 rounded-full px-4 py-2.5 text-sm font-bold text-white/85 hover:text-white"
             >
               Services <ChevronIcon size={16} className={cn("transition-transform", mega && "rotate-180")} />
@@ -74,7 +112,7 @@ export function Nav() {
                 mega ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0",
               )}
             >
-              <div className="glass grid grid-cols-2 gap-1 rounded-2xl p-2 ring-1 ring-white/10">
+              <div className="grid grid-cols-2 gap-1 rounded-2xl bg-[#0e0e10] p-2 ring-1 ring-white/12 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.95),0_0_0_1px_rgb(0_0_0/0.6)]">
                 {serviceLinks.map((s) => (
                   <Link
                     key={s.href}
@@ -135,7 +173,7 @@ export function Nav() {
       <div
         id="mobile-menu"
         className={cn(
-          "pointer-events-auto glass fixed inset-x-3 top-[calc(env(safe-area-inset-top)+5.2rem)] bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] overflow-y-auto rounded-2xl p-5 ring-1 ring-white/10 transition-all duration-300 lg:hidden",
+          "pointer-events-auto fixed inset-x-3 bg-[#0e0e10] shadow-[0_30px_80px_-20px_rgb(0_0_0/0.95)] top-[calc(env(safe-area-inset-top)+5.2rem)] bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] overflow-y-auto rounded-2xl p-5 ring-1 ring-white/10 transition-all duration-300 lg:hidden",
           open ? "visible opacity-100" : "invisible -translate-y-3 opacity-0",
         )}
       >
