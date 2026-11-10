@@ -94,6 +94,30 @@ How each Drive photo is used:
 - **SEO:** `AutomotiveBusiness` JSON-LD on every page (address, geo, hours, area served, socials, credentials, offer catalog), `FAQPage` and `BreadcrumbList` schema, per-page titles/descriptions/canonicals, `sitemap.xml`, `robots.txt`, `llms.txt`, Open Graph image, favicons. `aggregateRating` is only output once the Google review count is filled in `ratings.google.reviewCount`.
 - **Quote form:** 4 animated steps, up to 5 photos (compressed in the browser), honeypot + timing check + rate limit, emails via Resend, SMS fallback.
 
+## Quality checks (Nov 10, 2026)
+
+![Preview](docs/preview.jpg)
+
+**Lighthouse, mobile, live site** (Performance / Accessibility / Best Practices / SEO). Performance varies a few points run to run; ranges show repeated runs.
+
+| Page | Scores | LCP | CLS |
+|---|---|---|---|
+| `/` | 93–99 / 100 / 100 / 100 | 1.1 s | 0 |
+| `/auto-detailing` | 96–99 / 100 / 100 / 100 | 0.9–1.1 s | 0 |
+| `/ceramic-coating` | 98–100 / 100 / 100 / 100 | 1.1 s | 0 |
+| `/paint-correction` | 98 / 100 / 100 / 100 | 1.1 s | 0 |
+| `/lighting` | 100 / 100 / 100 / 100 | 1.1 s | 0 |
+| `/car-audio` | 100 / 100 / 100 / 100 | 1.1 s | 0 |
+| `/window-tint` | 100 / 100 / 100 / 100 | 1.1 s | 0 |
+| `/fleet` | 100 / 100 / 100 / 100 | 1.1 s | 0 |
+| `/gallery` | 93–95 / 100 / 100 / 100 | 2.5 s | 0 |
+| `/reviews` | 99 / 100 / 100 / 100 | 0.9 s | 0 |
+| `/about` | 96 / 100 / 100 / 100 | 2.7 s | 0 |
+| `/contact` | 100 / 100 / 100 / 100 | 1.0 s | 0 |
+| `/privacy` | 98 / 100 / 100 / 100 | 0.9 s | 0 |
+
+Also verified: zero TypeScript/ESLint errors, no console errors, no horizontal overflow at 375/390/768/1024/1440/1920, 13 passing unit tests (Eastern-time open/closed incl. DST, promo windows), promo auto-hide with `?previewDate`, quote API guards (honeypot, validation, rate limit, not-configured → SMS fallback), and the full 4-step quote flow in a real browser.
+
 ## [CONFIRM] list for Mike
 
 Everything below is already wired up — just update `content/site.ts` once Mike confirms.
