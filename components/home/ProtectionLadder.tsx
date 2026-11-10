@@ -50,12 +50,12 @@ export function ProtectionLadder({ showLink = true, headingLevel = "h2" }: { sho
                   t.level === 3 ? "bg-gradient-to-br from-igl/20 via-carbon to-carbon ring-igl/50" : "bg-carbon ring-white/10",
                 )}
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
+                <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+                  <div className="min-w-0">
                     <p className="eyebrow text-muted">Level {t.level}</p>
                     <h3 className="mt-1 text-xl font-black text-white uppercase sm:text-2xl">{t.name}</h3>
                   </div>
-                  <div className="shrink-0 text-right">
+                  <div className="shrink-0 sm:text-right">
                     <p className={cn("font-wide text-2xl font-black sm:text-3xl", t.level === 3 ? "text-igl-text" : "text-white")}>{t.duration}</p>
                     <p className="text-xs font-bold text-muted">{t.price}</p>
                   </div>

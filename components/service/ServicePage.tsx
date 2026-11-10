@@ -14,7 +14,7 @@ import { Process } from "../home/Process";
 import { QuoteSection } from "../quote/QuoteSection";
 import { LightsOn } from "../fx/LightsOn";
 import { Equalizer } from "../fx/Equalizer";
-import { HexCeiling } from "../hex/HexCeiling";
+import { CeilingBackdrop } from "../hex/HexCeiling";
 
 const QUOTE_PRESET: Record<ServiceSlug, string[]> = {
   "auto-detailing": ["Full Interior & Exterior Detail"],
@@ -25,6 +25,15 @@ const QUOTE_PRESET: Record<ServiceSlug, string[]> = {
   "window-tint": ["Window Tint"],
   fleet: ["Fleet Detailing"],
 };
+
+/** Widen a card or two so 3-column (and 2-column) grids never end with a lonely orphan. */
+function balancedSpan(i: number, n: number) {
+  const cls: string[] = [];
+  if (n % 2 === 1 && i === n - 1) cls.push("sm:col-span-2 lg:col-span-1");
+  if (n % 3 === 1 && (i === 0 || i === n - 1)) cls.push("lg:col-span-2");
+  if (n % 3 === 2 && i === 0) cls.push("lg:col-span-2");
+  return cls.join(" ");
+}
 
 const accentText = { red: "text-red-text", igl: "text-igl-text", neon: "text-cyan" } as const;
 const accentBg = { red: "bg-red", igl: "bg-igl", neon: "bg-gradient-to-r from-cyan via-violet to-magenta" } as const;
@@ -47,11 +56,7 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
 
       {/* Hero */}
       <section className="relative isolate overflow-hidden pt-36 pb-16 sm:pt-44 sm:pb-24" aria-labelledby="svc-title">
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[55%] opacity-60 [perspective:900px]">
-          <div className="absolute inset-x-[-30%] top-[-20%] origin-top [transform:rotateX(60deg)] sm:inset-x-[-10%]">
-            <HexCeiling className="h-auto w-full" seed={s.slug.length * 3 + 1} cols={13} rows={5} />
-          </div>
-        </div>
+        <CeilingBackdrop seed={s.slug.length * 3 + 1} className="opacity-70" />
         <div
           aria-hidden
           className={cn(
@@ -63,8 +68,8 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
                 : "bg-[radial-gradient(50%_60%_at_80%_60%,rgb(227_25_31/0.16),transparent_70%)]",
           )}
         />
-        <Container className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
+        <Container className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+          <div className="min-w-0">
             <nav aria-label="Breadcrumb" className="fade-up text-sm text-muted">
               <ol className="flex items-center gap-2">
                 <li>
@@ -81,11 +86,11 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
             <p className={cn("eyebrow fade-up mt-6", accentText[s.accent])} style={{ animationDelay: ".1s" }}>
               {s.eyebrow}
             </p>
-            <h1 id="svc-title" className="mt-4 text-[clamp(2.3rem,6vw,5rem)] leading-[0.95] font-black uppercase">
+            <h1 id="svc-title" className="mt-4 text-[clamp(2.1rem,9vw,4.6rem)] leading-[0.95] font-black uppercase">
               <span className="reveal-line chrome" style={{ animationDelay: ".2s" }}>
                 {s.seo.h1.replace(/ in .*$/, "")}
               </span>
-              <span className="reveal-line text-red" style={{ animationDelay: ".35s" }}>
+              <span className="reveal-line mt-2 text-[0.5em] leading-tight text-red" style={{ animationDelay: ".35s" }}>
                 {s.seo.h1.match(/ in .*$/)?.[0].trim() ?? "Southern Maryland"}
               </span>
             </h1>
@@ -108,7 +113,7 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
             )}
           </div>
           <div className="fade-up relative" style={{ animationDelay: ".4s" }}>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] ring-1 ring-white/15 shadow-[0_40px_80px_-30px_rgb(0_0_0/0.9)] lg:aspect-[4/5]">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] ring-1 ring-white/15 shadow-[0_40px_80px_-30px_rgb(0_0_0/0.9)] lg:aspect-[5/6]">
               <Photo slug={s.photo} alt={s.photoAlt} sizes="(min-width: 1024px) 42vw, 92vw" eager />
               <div className="absolute inset-0 bg-gradient-to-t from-jet/70 via-transparent to-transparent" />
             </div>
@@ -177,7 +182,12 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
           />
           <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {s.included.map((it, i) => (
-              <li key={it.title} className="group relative overflow-hidden rounded-3xl bg-carbon p-6 ring-1 ring-white/10 edge-red" data-reveal data-reveal-delay={(i % 3) * 80}>
+              <li
+                key={it.title}
+                className={cn("group relative overflow-hidden rounded-3xl bg-carbon p-6 ring-1 ring-white/10 edge-red", balancedSpan(i, s.included.length))}
+                data-reveal
+                data-reveal-delay={(i % 3) * 80}
+              >
                 <span aria-hidden className={cn("hex-clip mb-5 block h-6 w-7", accentBg[s.accent])} />
                 <h3 className="text-lg font-black text-white uppercase">{it.title}</h3>
                 <p className="mt-2 leading-relaxed text-chrome/85">{it.body}</p>
@@ -210,11 +220,11 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
             <dl className="mt-6 grid gap-1">
               {s.pricing.map((p) => (
                 <div key={p.label} className="flex items-start justify-between gap-4 border-b border-white/10 py-4 last:border-0">
-                  <dt>
+                  <dt className="min-w-0">
                     <span className="block font-bold text-white">{p.label}</span>
                     {p.note && <span className="text-sm text-muted">{p.note}</span>}
                   </dt>
-                  <dd className={cn("font-wide shrink-0 text-xl font-black", p.value === "Quote" ? "text-chrome" : accentText[s.accent])}>{p.value}</dd>
+                  <dd className={cn("font-wide max-w-[48%] text-right text-lg font-black sm:text-xl", p.value === "Quote" ? "text-chrome" : accentText[s.accent])}>{p.value}</dd>
                 </div>
               ))}
             </dl>
@@ -239,7 +249,7 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
             lead={s.proof.body}
           />
           {proofReviews.length > 0 && (
-            <ul className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <ul className={cn("mt-12 grid gap-4", proofReviews.length === 1 ? "max-w-2xl" : proofReviews.length === 2 ? "md:grid-cols-2" : "md:grid-cols-2 lg:grid-cols-3")}>
               {proofReviews.map((r, i) => (
                 <li key={r!.id} data-reveal data-reveal-delay={i * 90}>
                   <ReviewCard r={r!} />

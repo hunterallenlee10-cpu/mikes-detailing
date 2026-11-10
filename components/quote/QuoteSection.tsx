@@ -1,7 +1,7 @@
 import { business, links } from "@/content/site";
 import { CalendarIcon, ChatIcon, MailIcon, PhoneIcon } from "../icons";
 import { Container, SectionHead } from "../ui";
-import { QuoteBuilder } from "./QuoteBuilder";
+import { LazyQuoteBuilder } from "./LazyQuoteBuilder";
 
 export function QuoteSection({ initialServices, title, headingAs = "h2" }: { initialServices?: string[]; title?: string; headingAs?: "h1" | "h2" }) {
   const rows = [
@@ -46,7 +46,7 @@ export function QuoteSection({ initialServices, title, headingAs = "h2" }: { ini
             ))}
           </ul>
         </div>
-        <QuoteBuilder initialServices={initialServices} />
+        <LazyQuoteBuilder initialServices={initialServices} />
       </Container>
     </section>
   );

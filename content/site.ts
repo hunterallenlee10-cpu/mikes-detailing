@@ -24,7 +24,7 @@ export const business = {
   tagline: "Because Detail Matters",
   established: 2020,
   positioning: "One Stop Automotive Detailing & Accessory Shop",
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://mikesautomotivedetailing.com", // [CONFIRM] final domain
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://mikes-detailing-xi.vercel.app", // [CONFIRM] switch to the real domain when it is live
   phone: {
     display: "(301) 752-8505",
     e164: "+13017528505",
@@ -341,8 +341,8 @@ export const services: Service[] = [
     short: "Lighting",
     card: "LowGlow Certified Dealer & Installer. Underglow, rock lights, starlight headliners, ambient kits — no exposed wiring.",
     accent: "neon",
-    photo: "z06-frunk-engine-bay",
-    photoAlt: "Detailed C8 Z06 frunk and engine bay with clean, tucked wiring",
+    photo: "shop-hex-ceiling",
+    photoAlt: "Hexagon LED light ceiling glowing over the bay at the Leonardtown shop",
     seo: {
       title: "Underglow, Starlight Headliners & Ambient Lighting in Leonardtown, MD | LowGlow Certified | Mike's",
       description:

@@ -7,7 +7,7 @@ export function Faq({ items, title, id = "faq" }: { items: { q: string; a: strin
   return (
     <section id={id} className="relative py-24 sm:py-32" aria-labelledby={`${id}-title`}>
       <JsonLd data={faqSchema(items)} />
-      <Container className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+      <Container className="grid items-start gap-12 lg:grid-cols-[0.8fr_1.2fr]">
         <SectionHead
           eyebrow="FAQ"
           title={
@@ -17,7 +17,7 @@ export function Faq({ items, title, id = "faq" }: { items: { q: string; a: strin
           }
           lead="Don't see yours? Text Mike — he answers."
         />
-        <div className="grid gap-3">
+        <div className="grid content-start gap-3">
           {items.map((f) => (
             <details key={f.q} className="group rounded-2xl bg-carbon ring-1 ring-white/10 open:ring-white/25" data-reveal>
               <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left font-extrabold text-white [&::-webkit-details-marker]:hidden">

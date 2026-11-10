@@ -6,7 +6,7 @@ import { Container, SectionHead } from "../ui";
 export function ReviewCard({ r, className }: { r: Review; className?: string }) {
   return (
     <figure className={cn("relative flex h-full flex-col rounded-3xl bg-carbon p-6 ring-1 ring-white/10 edge-red", className)}>
-      <div className="flex items-center gap-0.5 text-[#fbbc04]" aria-label={r.source.includes("Google") ? "5 star Google review" : "Facebook recommendation"}>
+      <div className="flex items-center gap-0.5 text-[#fbbc04]" role="img" aria-label={r.source.includes("Google") ? "5 star Google review" : "Facebook recommendation"}>
         {r.source.includes("Google") ? Array.from({ length: 5 }).map((_, i) => <StarIcon key={i} size={16} />) : <span className="text-xs font-bold text-[#7fb1ff]">Recommends</span>}
       </div>
       <blockquote className="mt-4 flex-1 text-[1.02rem] leading-relaxed text-chrome">“{r.quote}”</blockquote>
@@ -18,7 +18,7 @@ export function ReviewCard({ r, className }: { r: Review; className?: string }) 
   );
 }
 
-export function Reviews({ ids, title, compact }: { ids?: string[]; title?: string; compact?: boolean }) {
+export function Reviews({ ids, title, compact, headingAs = "h2" }: { ids?: string[]; title?: string; compact?: boolean; headingAs?: "h1" | "h2" }) {
   const list = ids ? reviews.filter((r) => ids.includes(r.id)) : reviews;
   return (
     <section id="reviews" className="relative py-24 sm:py-32" aria-labelledby="reviews-title">
@@ -26,6 +26,7 @@ export function Reviews({ ids, title, compact }: { ids?: string[]; title?: strin
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <SectionHead
             eyebrow="Reviews"
+            as={headingAs}
             title={
               <span id="reviews-title">
                 <span className="chrome">{title ?? "Don't take our word."}</span> <span className="text-red">Take theirs.</span>

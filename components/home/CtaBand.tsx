@@ -14,7 +14,7 @@ export function CtaBand({ title = "Because Detail Matters." }: { title?: string 
           />
         ))}
       </div>
-      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(60%_80%_at_50%_50%,rgb(10_10_11/0.92),rgb(10_10_11/0.55))]" />
+      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(55%_70%_at_50%_50%,rgb(10_10_11/0.9),rgb(10_10_11/0.25))]" />
       <Container className="relative text-center">
         <p className="eyebrow text-red-text" data-reveal>
           {business.name}
@@ -26,7 +26,7 @@ export function CtaBand({ title = "Because Detail Matters." }: { title?: string 
           Call or text {business.phone.display}. Tell us the ride, we&apos;ll tell you the plan.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3" data-reveal>
-          <CallTextButtons />
+          <CallTextButtons className="justify-center" />
           <QuoteButton variant="chrome" />
         </div>
       </Container>

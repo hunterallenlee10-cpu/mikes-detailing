@@ -1,5 +1,5 @@
 import { business, ratings } from "@/content/site";
-import { HexCeiling } from "../hex/HexCeiling";
+import { CeilingBackdrop } from "../hex/HexCeiling";
 import { Photo } from "../Photo";
 import { CallTextButtons, Container, QuoteButton } from "../ui";
 import { StarIcon } from "../icons";
@@ -28,13 +28,7 @@ export function TrustChips({ className = "" }: { className?: string }) {
 export function Hero() {
   return (
     <section className="relative isolate overflow-hidden bg-jet pt-36 pb-16 sm:pt-40 lg:min-h-[100svh] lg:pt-44 lg:pb-24" aria-labelledby="hero-title">
-      {/* Ceiling lights in perspective */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[62%] [perspective:900px]">
-        <div className="absolute inset-x-[-30%] top-[-12%] origin-top [transform:rotateX(58deg)] sm:inset-x-[-12%]">
-          <HexCeiling className="h-auto w-full" />
-        </div>
-        <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_0%,rgb(200_215_255/0.18),transparent_70%)]" />
-      </div>
+      <CeilingBackdrop />
       {/* Glossy floor + reflection + sweep */}
       <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[55%] overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgb(20_20_24/0.9)_35%,#0a0a0b)]" />
@@ -44,13 +38,13 @@ export function Hero() {
       </div>
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_50%_at_80%_70%,rgb(227_25_31/0.16),transparent_70%)]" />
 
-      <Container className="grid items-center gap-12 lg:grid-cols-[1.25fr_0.75fr]">
+      <Container className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(340px,420px)] xl:gap-16">
         <div>
           <p className="eyebrow fade-up flex items-center gap-3 text-red-text" style={{ animationDelay: "0.25s" }}>
             <span aria-hidden className="inline-block h-[3px] w-6 rounded bg-current" />
             Leonardtown, MD · Est. {business.established}
           </p>
-          <h1 id="hero-title" className="mt-5 text-[clamp(2.35rem,7.4vw,6.6rem)] leading-[0.92] font-black uppercase">
+          <h1 id="hero-title" className="mt-5 text-[clamp(2.2rem,9.6vw,3.4rem)] leading-[0.92] sm:text-[clamp(3rem,6.6vw,4.6rem)] xl:text-[5.2rem] font-black uppercase">
             <span className="reveal-line chrome" style={{ animationDelay: "0.35s" }}>
               Southern Maryland&apos;s
             </span>

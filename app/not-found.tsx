@@ -1,4 +1,4 @@
-import { HexCeiling } from "@/components/hex/HexCeiling";
+import { CeilingBackdrop } from "@/components/hex/HexCeiling";
 import { Button, CallTextButtons, Container } from "@/components/ui";
 import { ArrowIcon } from "@/components/icons";
 
@@ -7,11 +7,7 @@ export const metadata = { title: "Page not found | Mike's Automotive Detailing",
 export default function NotFound() {
   return (
     <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden pt-32 pb-24">
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[60%] [perspective:900px]">
-        <div className="absolute inset-x-[-30%] top-[-10%] origin-top [transform:rotateX(58deg)] sm:inset-x-[-10%]">
-          <HexCeiling className="h-auto w-full" baseDelay={0} flickerOut seed={404} />
-        </div>
-      </div>
+      <CeilingBackdrop baseDelay={0} flickerOut seed={404} />
       <Container className="text-center">
         <p className="eyebrow text-red-text">Error 404</p>
         <h1 className="mx-auto mt-4 max-w-4xl text-[clamp(2.6rem,8vw,6.5rem)] leading-[0.92] font-black uppercase">

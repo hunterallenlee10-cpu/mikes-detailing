@@ -28,7 +28,7 @@ export function ProcessTimeline({ visuals }: { visuals: ReactNode[] }) {
   const progress = ((active + 1) / processSteps.length) * 100;
 
   return (
-    <div className="relative grid gap-8 md:grid-cols-2 md:gap-16">
+    <div className="relative grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-12 lg:gap-16">
       {/* Sticky visual */}
       <div className="sticky top-20 z-10 h-[40vh] md:top-28 md:h-[calc(100vh-9rem)]">
         <div className="relative h-full overflow-hidden rounded-[2rem] bg-carbon ring-1 ring-white/10 shadow-[0_30px_80px_-30px_rgb(0_0_0/0.9)]">
@@ -48,7 +48,7 @@ export function ProcessTimeline({ visuals }: { visuals: ReactNode[] }) {
           <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-5 sm:p-7">
             <div>
               <p className="eyebrow text-red-text">Step {String(active + 1).padStart(2, "0")} / 06</p>
-              <p className="font-wide mt-1 text-xl font-black text-white uppercase sm:text-3xl" aria-live="polite">
+              <p className="font-wide mt-1 text-lg font-black text-white uppercase sm:text-2xl xl:text-3xl" aria-live="polite">
                 {processSteps[active].title}
               </p>
             </div>
@@ -69,7 +69,7 @@ export function ProcessTimeline({ visuals }: { visuals: ReactNode[] }) {
               stepRefs.current[i] = el;
             }}
             data-index={i}
-            className="relative flex min-h-[46vh] gap-5 py-6 md:min-h-[62vh] md:items-center"
+            className="relative flex min-h-[34vh] gap-5 py-6 md:min-h-[48vh] md:items-center"
           >
             <span
               className={cn(
@@ -79,9 +79,11 @@ export function ProcessTimeline({ visuals }: { visuals: ReactNode[] }) {
             >
               {i + 1}
             </span>
-            <div className={cn("transition-opacity duration-500", i === active ? "opacity-100" : "opacity-55")}>
-              <h3 className="text-2xl font-black text-white uppercase sm:text-4xl">{s.title}</h3>
-              <p className="mt-3 max-w-md text-lg leading-relaxed text-chrome/85">{s.body}</p>
+            <div className="min-w-0">
+              <h3 className={cn("text-[1.2rem] font-black break-words uppercase transition-colors duration-500 sm:text-2xl xl:text-4xl", i === active ? "text-white" : "text-white/55")}>
+                {s.title}
+              </h3>
+              <p className={cn("mt-3 max-w-md text-lg leading-relaxed transition-colors duration-500", i === active ? "text-chrome" : "text-muted")}>{s.body}</p>
             </div>
           </li>
         ))}

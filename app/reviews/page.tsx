@@ -16,10 +16,9 @@ export default function ReviewsPage() {
     <>
       <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Reviews", path: "/reviews" }])} />
       <div className="pt-16 sm:pt-20">
-        <h1 className="sr-only">Customer reviews of Mike&apos;s Automotive Detailing</h1>
-        <Reviews title="Southern Maryland says it best." />
+        <Reviews headingAs="h1" title="Southern Maryland says it best." />
       </div>
-      <CtaBand title="Be the next 5-star review." />
+      <CtaBand title="Be the next 5‑star review." />
     </>
   );
 }

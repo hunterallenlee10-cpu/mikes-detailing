@@ -7,8 +7,8 @@ import { GalleryGrid, type Tile } from "./GalleryGrid";
 function Art({ item }: { item: GalleryItem }) {
   if (item.art === "underglow") {
     return (
-      <div role="img" aria-label={item.alt} className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(80%_70%_at_50%_80%,#1b0f3a,#0a0a0b)] p-6">
-        <UnderglowCar lit className="w-full max-w-md" />
+      <div role="img" aria-label={item.alt} className="absolute inset-0 flex items-start justify-center bg-[radial-gradient(80%_70%_at_50%_40%,#1b0f3a,#0a0a0b)] px-8 pt-[12%]">
+        <UnderglowCar lit className="w-full max-w-sm" />
       </div>
     );
   }

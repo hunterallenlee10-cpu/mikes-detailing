@@ -11,7 +11,7 @@ export function Footer() {
       <Container className="relative grid gap-12 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.1fr]">
         <div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo-320.webp" alt={`${business.name} logo`} width={320} height={196} loading="lazy" className="h-20 w-auto" />
+          <img src="/images/logo-320.webp" alt={`${business.name} logo`} width={320} height={239} loading="lazy" className="h-20 w-auto" />
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-muted">
             {business.positioning}. IGL Coatings Certified Installer & LowGlow Certified Dealer serving Leonardtown and all of Southern Maryland since {business.established}.
           </p>
@@ -75,7 +75,7 @@ export function Footer() {
               {business.phone.display}
             </a>
             <br />
-            <a href={links.email} data-track="email" className="break-all hover:text-white">
+            <a href={links.email} data-track="email" className="inline-block py-1.5 break-all hover:text-white">
               {business.email}
             </a>
           </address>
@@ -96,7 +96,7 @@ export function Footer() {
           <p>
             © {year} {business.name}. {business.tagline}.
           </p>
-          {business.websiteCredit.show && <p className="opacity-70">{business.websiteCredit.label}</p>}
+          {business.websiteCredit.show && <p>{business.websiteCredit.label}</p>}
         </div>
       </Container>
     </footer>

@@ -76,7 +76,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Footer />
         <MobileActionBar />
         <Effects />
-        <Analytics />
+        {/* Vercel Web Analytics only exists on Vercel deployments */}
+        {process.env.VERCEL && <Analytics />}
       </body>
     </html>
   );

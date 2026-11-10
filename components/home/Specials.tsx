@@ -12,11 +12,12 @@ export async function Specials() {
   const active = activeItems(promos, now);
   if (!active.length) return null;
   return (
+    <DateGate windows={active.map(({ startsAt, endsAt }) => ({ startsAt, endsAt }))}>
     <section id="specials" aria-label="Current specials" className="relative overflow-hidden py-20 sm:py-24">
       <div aria-hidden className="absolute inset-0 bg-[radial-gradient(70%_80%_at_50%_0%,rgb(158_15_20/0.35),transparent_70%)]" />
       <Container className="relative grid gap-8">
         {active.map((p) => (
-          <DateGate key={p.id} startsAt={p.startsAt} endsAt={p.endsAt}>
+          <DateGate key={p.id} windows={[{ startsAt: p.startsAt, endsAt: p.endsAt }]}>
             <article className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-graphite to-carbon p-6 ring-1 ring-red/30 sm:p-10" data-promo={p.id}>
               <Stripes className="absolute top-8 right-8 hidden w-32 opacity-40 sm:flex" />
               <p className="eyebrow text-red-text">{p.kicker}</p>
@@ -31,12 +32,21 @@ export async function Specials() {
                       className="group flex h-full flex-col rounded-2xl bg-jet/70 p-5 ring-1 ring-white/10 transition hover:ring-red/60"
                     >
                       <span className="text-sm font-bold text-white">{item.name}</span>
-                      <span className="mt-3 flex items-baseline gap-2">
+                      <span className="mt-3 flex flex-wrap items-baseline gap-x-2">
                         {item.was && <s className="text-sm font-bold text-muted">{item.was}</s>}
-                        <span className="font-wide text-3xl font-black text-red-text">{item.price}</span>
+                        <span className="font-wide text-[1.7rem] leading-none font-black whitespace-nowrap text-red-text xl:text-3xl">
+                          {item.price.startsWith("from ") ? (
+                            <>
+                              <span className="mr-1 align-middle text-sm font-bold text-muted">from</span>
+                              {item.price.slice(5)}
+                            </>
+                          ) : (
+                            item.price
+                          )}
+                        </span>
                       </span>
-                      <span className="mt-2 text-sm leading-snug text-muted">{item.note}</span>
-                      <ArrowIcon size={18} className="mt-auto pt-3 text-white/60 transition group-hover:translate-x-1 group-hover:text-white" />
+                      <span className="mt-2 mb-4 text-sm leading-snug text-muted">{item.note}</span>
+                      <ArrowIcon size={18} className="mt-auto shrink-0 translate-y-3 text-white/60 transition group-hover:translate-x-1 group-hover:text-white" />
                     </Link>
                   </li>
                 ))}
@@ -55,5 +65,6 @@ export async function Specials() {
         ))}
       </Container>
     </section>
+    </DateGate>
   );
 }

@@ -51,7 +51,7 @@ export function GalleryGrid({ tiles, categories, filterable = true }: { tiles: T
           ))}
         </div>
       )}
-      <ul className="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>li]:mb-4">
+      <ul className={cn("gap-4", filterable ? "columns-1 sm:columns-2 lg:columns-3 [&>li]:mb-4" : "grid sm:grid-cols-2 lg:grid-cols-3")}>
         {shown.map((t, i) => (
           <li key={t.key} className="break-inside-avoid">
             <button
@@ -60,12 +60,12 @@ export function GalleryGrid({ tiles, categories, filterable = true }: { tiles: T
               className="group relative block w-full overflow-hidden rounded-3xl bg-carbon text-left ring-1 ring-white/10 transition hover:ring-white/30"
               aria-label={`Open photo: ${t.title}`}
             >
-              <div className={cn("relative w-full", t.tall ? "aspect-[4/5]" : "aspect-[4/3]")}>
+              <div className={cn("relative w-full", t.tall && filterable ? "aspect-[4/5]" : "aspect-[4/3]")}>
                 <div className="absolute inset-0 transition duration-700 group-hover:scale-[1.04]">{t.thumb}</div>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-jet/95 via-jet/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-jet via-jet/45 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-5">
-                <p className="eyebrow text-red-text">{t.categories.join(" · ")}</p>
+                <p className="eyebrow text-white/75">{t.categories.join(" · ")}</p>
                 <p className="font-wide mt-1 text-base font-black text-white uppercase">{t.title}</p>
                 <p className="mt-1 line-clamp-2 text-sm text-chrome/85">{t.caption}</p>
               </div>

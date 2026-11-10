@@ -213,7 +213,7 @@ export function QuoteBuilder({ initialServices = [] }: { initialServices?: strin
           </ol>
         </div>
 
-        <div className="relative min-h-[26rem] px-5 py-7 sm:px-8">
+        <div className="relative min-h-[21rem] px-5 py-7 sm:px-8">
           {/* honeypot — hidden from humans */}
           <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
             <label>

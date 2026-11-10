@@ -85,3 +85,19 @@ export function HexCeiling({
     </svg>
   );
 }
+
+/** The hex ceiling in perspective, fading out toward the content. Used as a section background. */
+export function CeilingBackdrop({ seed = 7, flickerOut = false, baseDelay = 120, className }: { seed?: number; flickerOut?: boolean; baseDelay?: number; className?: string }) {
+  return (
+    <div
+      aria-hidden
+      className={cn("pointer-events-none absolute inset-x-0 top-0 -z-10 h-[340px] overflow-hidden [perspective:700px] sm:h-[460px] lg:h-[540px]", className)}
+      style={{ maskImage: "linear-gradient(180deg,#000 8%,rgb(0 0 0/.45) 42%,transparent 88%)", WebkitMaskImage: "linear-gradient(180deg,#000 8%,rgb(0 0 0/.45) 42%,transparent 88%)" }}
+    >
+      <div className="absolute top-0 left-1/2 w-[190%] origin-top [transform:translateX(-50%)_rotateX(52deg)] sm:w-[150%] lg:w-[125%]">
+        <HexCeiling className="h-auto w-full opacity-70" cols={19} rows={7} r={40} seed={seed} flickerOut={flickerOut} baseDelay={baseDelay} />
+      </div>
+      <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_0%,rgb(200_215_255/0.16),transparent_70%)]" />
+    </div>
+  );
+}

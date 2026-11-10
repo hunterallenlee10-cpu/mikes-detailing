@@ -52,7 +52,7 @@ export function Nav() {
       >
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label={`${business.name} — home`}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo-320.webp" alt="" width={320} height={196} className="h-10 w-auto sm:h-12" />
+          <img src="/images/logo-320.webp" alt="" width={320} height={239} className="h-12 w-auto sm:h-14" />
           <span className="sr-only">{business.name}</span>
         </Link>
 
