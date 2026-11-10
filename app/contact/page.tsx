@@ -18,7 +18,7 @@ export default function ContactPage() {
       <div className="pt-12 sm:pt-16">
         <QuoteSection headingAs="h1" title="Let's talk." />
       </div>
-      <VisitShop eagerMap />
+      <VisitShop />
     </>
   );
 }

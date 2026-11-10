@@ -2,10 +2,10 @@ import { business, hoursDisplay, links } from "@/content/site";
 import { ArrowIcon, ClockIcon, PinIcon } from "../icons";
 import { Photo } from "../Photo";
 import { Button, Container, SectionHead } from "../ui";
-import { MapEmbed } from "./MapEmbed";
+import { ShopMap } from "./ShopMap";
 import { OpenNow } from "./OpenNow";
 
-export function VisitShop({ headingAs = "h2", eagerMap = false }: { headingAs?: "h1" | "h2"; eagerMap?: boolean }) {
+export function VisitShop({ headingAs = "h2" }: { headingAs?: "h1" | "h2" }) {
   return (
     <section id="visit" className="relative overflow-hidden py-24 sm:py-32" aria-labelledby="visit-title">
       <Container>
@@ -72,7 +72,7 @@ export function VisitShop({ headingAs = "h2", eagerMap = false }: { headingAs?: 
               </div>
             </div>
             <div className="min-h-72 flex-1" data-reveal>
-              <MapEmbed eager={eagerMap} />
+              <ShopMap />
             </div>
           </div>
         </div>

@@ -40,7 +40,8 @@ export default function PrivacyPage() {
             <h2>Analytics</h2>
             <p className="mt-2">
               We use Vercel Web Analytics to count page views and clicks on buttons like “Call” or “Get a Quote.” It doesn&apos;t use cookies and doesn&apos;t identify you personally.
-              The map on our contact section is provided by Google Maps and only loads when you scroll to it or tap it; Google&apos;s own privacy policy applies to it.
+              Our map is a drawing hosted on this site (map data © OpenStreetMap contributors), so it doesn&apos;t send anything to a map provider.
+              The “Directions” button opens Google Maps, where Google&apos;s own privacy policy applies.
             </p>
           </div>
           <div>
