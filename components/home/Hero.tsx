@@ -1,4 +1,5 @@
-import { business, ratings } from "@/content/site";
+import type { ReactNode } from "react";
+import { business, links, ratings } from "@/content/site";
 import { CeilingBackdrop } from "../hex/HexCeiling";
 import { Photo } from "../Photo";
 import { CallTextButtons, Container, QuoteButton } from "../ui";
@@ -6,19 +7,23 @@ import { StarIcon } from "../icons";
 
 export function TrustChips({ className = "" }: { className?: string }) {
   const chips = [
-    { k: "google", node: <><StarIcon size={14} className="text-[#fbbc04]" /> {ratings.google.rating.toFixed(1)} Google</> },
-    { k: "fb", node: <>{ratings.facebook.recommendPercent}% Recommend on Facebook</> },
+    { k: "google", href: links.googleReviews, label: "See our Google reviews", node: <><StarIcon size={14} className="text-[#fbbc04]" /> {ratings.google.rating.toFixed(1)} Google</> },
+    { k: "fb", href: links.facebookReviews, label: "See our Facebook reviews", node: <>{ratings.facebook.recommendPercent}% Recommend on Facebook</> },
     { k: "details", node: <>{business.stats.detailsCompleted} Details</> },
     { k: "est", node: <>Est. {business.established}</> },
-  ];
+  ] as { k: string; node: ReactNode; href?: string; label?: string }[];
+  const chip = "inline-flex items-center gap-1.5 rounded-full bg-white/[0.06] px-3.5 py-2 text-xs font-bold text-white ring-1 ring-white/12 backdrop-blur sm:text-[0.8rem]";
   return (
     <ul className={`flex flex-wrap gap-2 ${className}`} aria-label="Why customers trust us">
       {chips.map((c) => (
-        <li
-          key={c.k}
-          className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.06] px-3.5 py-2 text-xs font-bold text-white ring-1 ring-white/12 backdrop-blur sm:text-[0.8rem]"
-        >
-          {c.node}
+        <li key={c.k} className={c.href ? "flex" : chip}>
+          {c.href ? (
+            <a href={c.href} target="_blank" rel="noopener noreferrer" aria-label={`${c.label} (opens in a new tab)`} data-track={`reviews_${c.k}`} className={`${chip} transition hover:bg-white/[0.12] hover:ring-white/30`}>
+              {c.node}
+            </a>
+          ) : (
+            c.node
+          )}
         </li>
       ))}
     </ul>

@@ -4,6 +4,8 @@ import { JsonLd } from "@/components/JsonLd";
 import { Gallery } from "@/components/gallery/Gallery";
 import { CtaBand } from "@/components/home/CtaBand";
 import { Container, SectionHead } from "@/components/ui";
+import { VideoClip } from "@/components/VideoClip";
+import { galleryVideos } from "@/content/site";
 
 export const metadata = pageMeta({
   title: "Detailing & Ceramic Coating Gallery | Leonardtown, MD | Mike's Automotive Detailing",
@@ -27,13 +29,34 @@ export default function GalleryPage() {
                 <span className="chrome">Real cars.</span> <span className="text-red">Real results.</span>
               </>
             }
-            lead="Every photo here is Mike's own work. Filter by service, tap to zoom."
+            lead="Every photo and clip here is Mike's own work. Filter by service, tap to zoom."
           />
           <div className="mt-12">
             <Gallery />
           </div>
         </Container>
       </section>
+      {galleryVideos.length > 0 && (
+        <section className="relative pb-24" aria-labelledby="video-title">
+          <Container>
+            <SectionHead
+              eyebrow="On video"
+              title={
+                <span id="video-title">
+                  <span className="chrome">Hit play.</span> <span className="text-red">See it live.</span>
+                </span>
+              }
+            />
+            <ul className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {galleryVideos.map((v) => (
+                <li key={v} className="mx-auto w-full max-w-[22rem]" data-reveal>
+                  <VideoClip slug={v} />
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </section>
+      )}
       <CtaBand title="Your ride's next." />
     </>
   );

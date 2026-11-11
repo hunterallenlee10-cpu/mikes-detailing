@@ -61,13 +61,18 @@ export function Reviews({ ids, title, compact, headingAs = "h2" }: { ids?: strin
             </li>
           ))}
         </ul>
-        <div className="mt-8 flex flex-wrap gap-4 text-sm font-extrabold">
-          <a href={links.googleReviews} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 text-white hover:text-red-text">
-            Read all Google reviews <ArrowIcon size={16} className="transition group-hover:translate-x-1" />
+        <div className="mt-10 flex flex-wrap gap-3 text-sm font-extrabold">
+          <a href={links.googleReviews} target="_blank" rel="noopener noreferrer" data-track="reviews_google" className="group inline-flex min-h-12 items-center gap-2 rounded-full bg-white/[0.05] px-5 text-white ring-1 ring-white/15 hover:bg-white/10">
+            <StarIcon size={16} className="text-[#fbbc04]" /> Read all Google reviews <ArrowIcon size={16} className="transition group-hover:translate-x-1" />
           </a>
-          <a href={links.facebookReviews} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 text-white hover:text-red-text">
-            Read Facebook reviews <ArrowIcon size={16} className="transition group-hover:translate-x-1" />
+          <a href={links.facebookReviews} target="_blank" rel="noopener noreferrer" data-track="reviews_facebook" className="group inline-flex min-h-12 items-center gap-2 rounded-full bg-white/[0.05] px-5 text-white ring-1 ring-white/15 hover:bg-white/10">
+            <FacebookIcon size={16} className="text-[#7fb1ff]" /> Read Facebook reviews <ArrowIcon size={16} className="transition group-hover:translate-x-1" />
           </a>
+          {links.googleWriteReview && (
+            <a href={links.googleWriteReview} target="_blank" rel="noopener noreferrer" data-track="reviews_write" className="group inline-flex min-h-12 items-center gap-2 rounded-full bg-red px-5 text-white hover:bg-[#f0262c]">
+              Leave Mike a review <ArrowIcon size={16} className="transition group-hover:translate-x-1" />
+            </a>
+          )}
         </div>
       </Container>
     </section>

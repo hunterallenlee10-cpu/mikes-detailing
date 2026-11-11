@@ -52,6 +52,7 @@ export async function POST(request: Request) {
     phone: field(fd, "phone", 40),
     email: field(fd, "email", 200),
     date: field(fd, "date", 20),
+    referredBy: field(fd, "referredBy", 60),
     services: (() => {
       try {
         const v = JSON.parse(field(fd, "services", 3000));
@@ -82,6 +83,7 @@ export async function POST(request: Request) {
     ["Vehicle", `${q.vehicleType}${vehicle ? ` — ${vehicle}` : ""}`],
     ["Services", q.services.join(", ") || "Not sure yet"],
     ["Preferred date", q.date],
+    ["Referred by", q.referredBy],
     ["Notes", q.notes],
     ["Photos", files.length ? `${files.length} attached` : "None"],
   ];
@@ -108,7 +110,7 @@ export async function POST(request: Request) {
       from: process.env.QUOTE_FROM_EMAIL || "Mike's Website <onboarding@resend.dev>",
       to: process.env.QUOTE_TO_EMAIL || business.email,
       replyTo: q.email || undefined,
-      subject: `Quote: ${vehicle || q.vehicleType} — ${q.name}`,
+      subject: `Quote: ${vehicle || q.vehicleType} — ${q.name}${q.referredBy ? ` (referred by ${q.referredBy})` : ""}`,
       text,
       html,
       attachments,

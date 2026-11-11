@@ -24,6 +24,10 @@ Open **`content/site.ts`** on GitHub, click the pencil, change the text, and com
 | Prices | `prices` (full detail, ceramic "from" price, tint removal) |
 | Specials / promos | `promos` — each has `startsAt` / `endsAt`. They show automatically inside those dates and hide themselves after. |
 | Google / Facebook rating numbers | `ratings` |
+| Review links (incl. "Leave a review" button) | `links.googleReviews`, `links.facebookReviews`, `links.googleWriteReview` |
+| Videos (captions, which page shows which clip) | `videos`, `galleryVideos`, a promo's `video`, a service's `proof.video` |
+| Refer-a-friend rewards | `referral` |
+| Gift cards (Square / Venmo / PayPal links, amounts) | `giftCards` |
 | Reviews | `reviews` — real quotes only; trim with "…", never change words |
 | Gallery captions | `gallery` |
 | FAQ | `faqs` (home) and each service's `faqs` |
@@ -85,6 +89,28 @@ How each Drive photo is used:
 | 12 | Tacoma | Small gallery tile, Tint page (plate + watermark cropped out) |
 | 13 | Shop hex lights | Home hero card, Visit the Shop, Audio page, gallery (straightened 11°) |
 | 14 | Grand opening flyer | Reference only — rebuilt as the native Specials component |
+| 15 | T.N. Bowes HVAC van (Nov 2026) | Fleet hero, gallery (plate blurred) |
+| 16 | C8 underglow in the bay (Nov 2026) | Lighting hero + home Lighting card, gallery (replaces the drawn underglow illustration) |
+
+The script keeps any photo whose original isn't on your machine exactly as it is, so you can add new photos without having every old original.
+
+### Videos
+
+Clips live in `public/videos/<slug>.mp4` (H.264, 720px wide, `+faststart`) with a poster frame at `public/videos/<slug>.webp`, and are listed in `videos` in `content/site.ts`. Silent clips loop muted while on screen; clips with sound show "Tap for sound". Crop out plates before publishing (the beading clip is cropped above the plate). Example encode:
+
+```bash
+ffmpeg -i IN.MOV -ss 0 -t 9 -vf "scale=720:-2,format=yuv420p" -c:v libx264 -crf 25 -preset slow -c:a aac -b:a 112k -movflags +faststart -map_metadata -1 public/videos/NAME.mp4
+```
+
+| Clip | Source | Where |
+|---|---|---|
+| `tnb-tint-a1` | IMG_8973, first 8.9 s ("My man Mike — A1… check out them tints, baby — woo!") | Fleet + Window Tint proof sections, gallery |
+| `water-beading-sealant` | IMG_9087, silent, cropped above the plate | Fall Exterior Special card, gallery |
+
+### Refer a friend & gift cards
+
+- **`/refer`** — a customer types their name and gets a personal link (`/?ref=Name`) to text or share. When a friend opens it, the site remembers the name on their phone (90 days), shows a small "Name sent you" note, and pre-fills "Referred by" in the quote form, so the quote email/text says who sent them. No accounts or database needed.
+- **`/gift-cards`** — pick an amount → pay online or "Text Mike to order". Buttons appear for whatever is filled in `giftCards`: a **Square eGift Card** link (recommended: free to set up, 2.5% load fee + card processing; the card is emailed/texted to the recipient and can be added to Apple Wallet), a **Venmo Business** username, or a **PayPal.me** username. With none filled in, the page still works through "Text Mike to order".
 
 ### Shop map
 
@@ -98,7 +124,7 @@ npm run map
 
 - **Home:** hex-light power-on hero → certifications → live specials → 6 service cards → ceramic protection ladder with the water-beading demo → pinned 6-step process → recent work → reviews → Meet Mike → quote builder → Visit the Shop (live Open now/Closed in Eastern time, custom night map) → FAQ → "Because Detail Matters" CTA.
 - **Service pages:** `/auto-detailing`, `/ceramic-coating`, `/paint-correction`, `/lighting`, `/car-audio`, `/window-tint`, `/fleet` — each with hero, signature feature, what's included, who it's for, pricing, proof + matching reviews, FAQ (with FAQ schema), and a quote form pre-selected for that service.
-- `/gallery` (filter + lightbox), `/reviews`, `/about`, `/contact`, `/privacy`, and a 404 where the hex lights flicker out.
+- `/gallery` (filter + lightbox + "On video" clips), `/reviews`, `/about`, `/contact`, `/refer` (refer a friend), `/gift-cards`, `/privacy`, and a 404 where the hex lights flicker out.
 - **SEO:** `AutomotiveBusiness` JSON-LD on every page (address, geo, hours, area served, socials, credentials, offer catalog), `FAQPage` and `BreadcrumbList` schema, per-page titles/descriptions/canonicals, `sitemap.xml`, `robots.txt`, `llms.txt`, Open Graph image, favicons. `aggregateRating` is only output once the Google review count is filled in `ratings.google.reviewCount`.
 - **Quote form:** 4 animated steps, up to 5 photos (compressed in the browser), honeypot + timing check + rate limit, emails via Resend, SMS fallback.
 
@@ -136,12 +162,15 @@ Everything below is already wired up — just update `content/site.ts` once Mike
 4. **Travel / mobile service** — still offered now that the shop is open? → `business.offersMobileService`.
 5. **LowGlow dealer link or code** → `business.lowglowUrl` / `business.lowglowCode`.
 6. **IGL warranty terms** — not stated anywhere on the site yet (we don't publish warranties without confirmation).
-7. **Audio and tint brands** he carries — not listed yet.
-8. **Google review count + exact review link** (`g.page/r/…`) → `ratings.google.reviewCount`, `links.googleReviews`. Unlocks star-rating schema.
+7. **Tint brand** he uses — not listed yet. (Audio brands: done — see the Car Audio page.)
+8. **Google review count + exact review link** (`g.page/r/…`) → `ratings.google.reviewCount`, `links.googleReviews`, `links.googleWriteReview`. Unlocks star-rating schema and the "Leave Mike a review" button.
 9. **Domain** — set `NEXT_PUBLIC_SITE_URL` (and `business.siteUrl`) to the real domain.
 10. **Shop photo car** — photo 13 is captioned without naming the car model; confirm what it is if he wants it named.
-11. **Underglow photo** — the C8 Z06 underglow gallery tile uses a drawn illustration (clearly labelled) until Mike sends a real photo of the install.
+11. ~~Underglow photo~~ — done: real photo of the C8 underglow install (Nov 2026). Is it the 2025 Z06 from the lighting write-up? If so, the caption can name it.
 12. **Official IGL / LowGlow dealer badges** — site uses tasteful text badges; swap in official assets if he has them.
+13. **Referral rewards** — site says $25 off for both people (`referral`). Placeholder until Mike picks the real reward.
+14. **Gift cards** — which way he wants to take payment: Square eGift link, Venmo Business username, and/or PayPal.me → `giftCards`. Also confirm the terms line.
+15. **More photos/videos** — recent photos of the nicer cars and short clips of Mike working (originals straight from his phone, not screenshots).
 
 ---
 

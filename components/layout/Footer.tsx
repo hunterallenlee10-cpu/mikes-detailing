@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { business, hoursDisplay, links, nav, services } from "@/content/site";
+import { business, footerExtras, hoursDisplay, links, nav, ratings, services } from "@/content/site";
 import { Container, Stripes } from "../ui";
-import { FacebookIcon, InstagramIcon, TikTokIcon } from "../icons";
+import { FacebookIcon, InstagramIcon, StarIcon, TikTokIcon } from "../icons";
 
 export function Footer() {
   const year = 2026;
@@ -34,6 +34,18 @@ export function Footer() {
               </a>
             ))}
           </div>
+          <ul className="mt-6 grid gap-2 text-sm" aria-label="Our reviews">
+            <li>
+              <a href={links.googleReviews} target="_blank" rel="noopener noreferrer" data-track="reviews_google" className="inline-flex items-center gap-2 font-bold text-white hover:text-red-text">
+                <StarIcon size={14} className="text-[#fbbc04]" /> {ratings.google.rating.toFixed(1)} on Google — read reviews
+              </a>
+            </li>
+            <li>
+              <a href={links.facebookReviews} target="_blank" rel="noopener noreferrer" data-track="reviews_facebook" className="inline-flex items-center gap-2 font-bold text-white hover:text-red-text">
+                <FacebookIcon size={14} className="text-[#7fb1ff]" /> {ratings.facebook.recommendPercent}% recommend on Facebook
+              </a>
+            </li>
+          </ul>
         </div>
 
         <div>
@@ -52,7 +64,7 @@ export function Footer() {
         <div>
           <h2 className="eyebrow text-white">Explore</h2>
           <ul className="mt-4 grid gap-2.5 text-sm">
-            {[{ label: "Home", href: "/" }, ...nav, { label: "Get a Quote", href: "/#quote" }, { label: "Privacy", href: "/privacy" }].map((n) => (
+            {[{ label: "Home", href: "/" }, ...nav, ...footerExtras, { label: "Get a Quote", href: "/#quote" }, { label: "Privacy", href: "/privacy" }].map((n) => (
               <li key={n.href}>
                 <Link href={n.href} className="text-muted transition hover:text-white">
                   {n.label}
