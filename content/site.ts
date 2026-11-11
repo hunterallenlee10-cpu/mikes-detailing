@@ -11,8 +11,9 @@
 
 import type { PhotoSlug } from "./images.generated";
 
-/** Online booking page (his Facebook "Book now" → Koalendar). Leave "" and every "Book Online" button opens the quote form instead. */
-export const BOOKING_URL = ""; // [CONFIRM] exact Koalendar URL
+/** Online booking page, if Mike ever uses one. Leave "" and every "Book Online" button opens the quote form instead.
+ *  (As of Nov 2026 his posts say "DM or Call/Text (301) 752-8505 to get scheduled" — no public booking link.) */
+export const BOOKING_URL = "";
 
 /* ───────────────────────────── Business basics ───────────────────────────── */
 
@@ -24,7 +25,7 @@ export const business = {
   tagline: "Because Detail Matters",
   established: 2020,
   positioning: "One Stop Automotive Detailing & Accessory Shop",
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://mikes-detailing-xi.vercel.app", // [CONFIRM] switch to the real domain when it is live
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://www.mikesautomotivedetailingmd.com",
   phone: {
     display: "(301) 752-8505",
     e164: "+13017528505",
@@ -109,7 +110,7 @@ export const ratings = {
 /* ──────────────────────────────── Prices ─────────────────────────────────── */
 export const prices = {
   fullDetail: 350, // Full Interior & Exterior Detail (regular, no polishing)
-  ceramicFrom: 1500, // [CONFIRM] IGL ceramic packages "starting at" (an older post said $800)
+  ceramicFrom: 1500, // IGL ceramic packages "starting at" (Grand Opening flyer, Oct 24, 2026)
   tintRemovalPerWindow: 20,
 };
 
@@ -133,8 +134,8 @@ export const promos: Promo[] = [
     id: "grand-opening-2026",
     title: "Grand Opening Specials",
     kicker: "New Leonardtown shop · 4 weeks only",
-    startsAt: "2026-10-24T00:00:00-04:00", // [CONFIRM] official grand-opening date
-    endsAt: "2026-11-21T23:59:59-05:00", // [CONFIRM] 4 weeks after grand opening
+    startsAt: "2026-10-24T00:00:00-04:00", // announced Oct 24, 2026; doors opened Mon Oct 26
+    endsAt: "2026-11-21T23:59:59-05:00", // [CONFIRM] "four weeks" from Oct 24 = Nov 21, from Oct 26 = Nov 23
     banner: "Grand Opening Specials — Full Detail $279 · IGL Ceramic from $1,299",
     items: [
       { name: "Full Interior & Exterior Detail", price: "$279", was: "$350", note: "First 20 bookings. No polishing included.", href: "/auto-detailing" },
@@ -149,8 +150,8 @@ export const promos: Promo[] = [
     id: "fall-exterior-2026",
     title: "Fall Exterior Special",
     kicker: "Beat the winter road salt",
-    startsAt: "2026-09-22T00:00:00-04:00",
-    endsAt: "2026-11-30T23:59:59-05:00", // [CONFIRM] still running? end date?
+    startsAt: "2026-11-07T00:00:00-05:00", // first posted Nov 7, 2026
+    endsAt: "2026-11-30T23:59:59-05:00", // [CONFIRM] end date (posts only say "limited spots")
     banner: "Fall Exterior Special — $100 wash + 3-month sealant + tire coating",
     items: [
       {

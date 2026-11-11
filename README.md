@@ -154,23 +154,25 @@ Also verified: zero TypeScript/ESLint errors, no console errors, no horizontal o
 
 ## [CONFIRM] list for Mike
 
-Everything below is already wired up — just update `content/site.ts` once Mike confirms.
+Updated Nov 11, 2026 after checking his Instagram, TikTok and Google listing (Facebook is login-walled). Everything is wired up — just update `content/site.ts` once Mike answers.
 
-1. **Booking URL** — exact Koalendar link behind the Facebook "Book now" button → `BOOKING_URL`.
-2. **Ceramic starting price** — site says IGL packages start at **$1,500** (an older post said $800) → `prices.ceramicFrom`.
-3. **Promo dates** — Grand Opening assumed to run **Oct 24 → Nov 21, 2026** (4 weeks); Fall Exterior Special $100 assumed to run through **Nov 30, 2026**. Is the Fall special still running? → `promos[].startsAt / endsAt`.
-4. **Travel / mobile service** — still offered now that the shop is open? → `business.offersMobileService`.
-5. **LowGlow dealer link or code** → `business.lowglowUrl` / `business.lowglowCode`.
-6. **IGL warranty terms** — not stated anywhere on the site yet (we don't publish warranties without confirmation).
-7. **Tint brand** he uses — not listed yet. Audio brands are done (Car Audio page → "Brands we install", logos in `public/images/brands/`, list in `audioBrands`).
-8. ~~Google review links~~ — done (Nov 11, 2026): read-reviews and write-a-review links use his Google place ID. Review count is 8 (5.0) — bump `ratings.google.reviewCount` as more come in. **Google Business Profile fixes for Mike:** his category shows as "Car wash" (should be "Car detailing service") and his website shows as his Facebook page (should be this site once the domain is live).
-9. **Domain** — set `NEXT_PUBLIC_SITE_URL` (and `business.siteUrl`) to the real domain.
-10. **Shop photo car** — photo 13 is captioned without naming the car model; confirm what it is if he wants it named.
-11. ~~Underglow photo~~ — done: real photo of the C8 underglow install (Nov 2026). Is it the 2025 Z06 from the lighting write-up? If so, the caption can name it.
-12. **Official IGL / LowGlow dealer badges** — site uses tasteful text badges; swap in official assets if he has them.
-13. **Referral rewards** — site says $25 off for both people (`referral`). Placeholder until Mike picks the real reward.
-14. **Gift cards** — which way he wants to take payment: Square eGift link, Venmo Business username, and/or PayPal.me → `giftCards`. Also confirm the terms line.
-15. **More photos/videos** — recent photos of the nicer cars and short clips of Mike working (originals straight from his phone, not screenshots).
+**Still need Mike:**
+
+1. **Referral rewards** — site says $25 off for both people (`referral`). Placeholder until Mike picks the real reward.
+2. **Gift cards** — how he wants to take payment: Square eGift link, Venmo Business username, and/or PayPal.me → `giftCards`. Also confirm the terms line.
+3. **Hours** — the site says Mon–Fri 7–6, Sat 9–3, Sun closed; his Google listing says Mon–Sat 7 AM–7 PM, Sun 10 AM–6 PM. Which is right? → `hours` + `hoursDisplay` (and fix Google to match).
+4. **Fall Exterior Special end date** — first posted Nov 7, still "limited spots" on Nov 10; site assumes it ends **Nov 30** → `promos[1].endsAt`.
+5. **Grand Opening end date** — announced Oct 24, doors opened Mon Oct 26, "four weeks only". Site ends it **Nov 21**; counting from Oct 26 it would be Nov 23 → `promos[0].endsAt`.
+6. **Mobile / on-site service** — last "We will travel!" post was Sept 11 (before the shop). Still offered? → `business.offersMobileService`.
+7. **More photos/videos** — recent photos of the nicer cars and short clips of Mike working (originals straight from his phone, not screenshots).
+
+**Optional (site is fine without):** is the C8 underglow car (also the car in the hex-light shop photo) the 2025 Z06? · tint film brand · IGL warranty terms beyond "4-year" · LowGlow discount code (he isn't in LowGlow's public installer locator yet) · official IGL/LowGlow badge images.
+
+**Mike's Google Business Profile to-dos:** category "Car wash" → "Car detailing service"; website → `https://www.mikesautomotivedetailingmd.com`; show the shop address; make the hours match.
+
+**Resolved:** booking link (none — his posts say DM or call/text, so "Book Online" opens the quote form) · ceramic "from" price ($1,500, per the Oct 24 flyer) · Google review links + count · domain (`www.mikesautomotivedetailingmd.com`) · audio brands incl. JL Audio · underglow photo.
+
+**Hosting note:** Vercel's production branch is still `claude/affectionate-einstein-ivbncj`, so merging to `main` only makes a preview. Change it in Vercel → Project → Settings → Environments → Production → Branch Tracking to `main` (until then, promote the latest `main` deployment to production).
 
 ---
 
