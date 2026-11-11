@@ -16,6 +16,7 @@ import { LightsOn } from "../fx/LightsOn";
 import { Equalizer } from "../fx/Equalizer";
 import { CeilingBackdrop } from "../hex/HexCeiling";
 import { VideoClip } from "../VideoClip";
+import { BrandStrip } from "./BrandStrip";
 
 const QUOTE_PRESET: Record<ServiceSlug, string[]> = {
   "auto-detailing": ["Full Interior & Exterior Detail"],
@@ -166,6 +167,7 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
             />
             <Equalizer className="mt-12" />
             <p className="mt-3 text-xs text-muted">Visual only — no sound plays on this page.</p>
+            <BrandStrip />
           </Container>
         </section>
       )}

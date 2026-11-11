@@ -409,6 +409,7 @@ export const services: Service[] = [
       { title: "Speaker installs", body: "Clarity you can actually hear at highway speed." },
       { title: "Clean wiring", body: "Top-notch, hidden, done right — same standard as our lighting." },
       { title: "In-shop listening demo", body: "Bring your playlist. Hear it before you buy." },
+      { title: "Name brands", body: "Skar Audio, Focal, Memphis, Sundown, JL Audio, AudioControl, Rockford Fosgate and more." },
     ],
     forWho: ["Factory systems that sound flat", "Bass heads", "Anyone who wants it clean and reliable", "Budget builds — we'll make it hit"],
     proof: {
@@ -420,6 +421,7 @@ export const services: Service[] = [
     faqs: [
       { q: "Can I hear the audio before I buy?", a: "Yes! Come in and play whatever song you'd like." },
       { q: "Do you do budget builds?", a: "Yes — from budget builds to custom-made audio equipment." },
+      { q: "What audio brands do you install?", a: "Skar Audio, Focal, Memphis Car Audio, Sundown Audio, JL Audio, AudioControl, Rockford Fosgate and more. Ask about anything you have your eye on." },
     ],
     feature: "audio",
   },
@@ -647,6 +649,19 @@ export const videos: Record<VideoSlug, Video> = {
 };
 /** Clips shown in the gallery's "On video" row, in order. Add Mike-at-work clips here. */
 export const galleryVideos: VideoSlug[] = ["tnb-tint-a1", "water-beading-sealant"];
+
+/* ──────────────────────────────── Audio brands ───────────────────────────── */
+// Official logos in public/images/brands (shown flat white). width/height = the file's proportions.
+// No `file` → the name is shown as text until we have the official logo.
+export const audioBrands: { name: string; file?: string; width: number; height: number }[] = [
+  { name: "Skar Audio", file: "skar.svg", width: 1991, height: 606 },
+  { name: "Focal", file: "focal.svg", width: 284, height: 59 },
+  { name: "Memphis Car Audio", file: "memphis.png", width: 640, height: 93 },
+  { name: "Sundown Audio", file: "sundown.png", width: 640, height: 172 },
+  { name: "JL Audio", width: 0, height: 0 }, // [CONFIRM] official JL Audio logo file (ask JL/Garmin dealer support)
+  { name: "Rockford Fosgate", file: "rockford-fosgate.svg", width: 183, height: 31 },
+  { name: "AudioControl", file: "audiocontrol.svg", width: 257, height: 21 },
+];
 
 /* ─────────────────────────────── Refer a friend ──────────────────────────── */
 // Customers make a personal link on /refer. When a friend opens it, the friend's quote

@@ -162,7 +162,7 @@ Everything below is already wired up — just update `content/site.ts` once Mike
 4. **Travel / mobile service** — still offered now that the shop is open? → `business.offersMobileService`.
 5. **LowGlow dealer link or code** → `business.lowglowUrl` / `business.lowglowCode`.
 6. **IGL warranty terms** — not stated anywhere on the site yet (we don't publish warranties without confirmation).
-7. **Tint brand** he uses — not listed yet. (Audio brands: done — see the Car Audio page.)
+7. **Tint brand** he uses — not listed yet. Audio brands are done (Car Audio page → "Brands we install", logos in `public/images/brands/`, list in `audioBrands`). **JL Audio** shows as text: their site now redirects to Garmin and there's no public logo file — ask JL/Garmin dealer support for the official logo, drop it in `public/images/brands/` and add `file` + its width/height to the JL Audio entry.
 8. **Google review count + exact review link** (`g.page/r/…`) → `ratings.google.reviewCount`, `links.googleReviews`, `links.googleWriteReview`. Unlocks star-rating schema and the "Leave Mike a review" button.
 9. **Domain** — set `NEXT_PUBLIC_SITE_URL` (and `business.siteUrl`) to the real domain.
 10. **Shop photo car** — photo 13 is captioned without naming the car model; confirm what it is if he wants it named.
