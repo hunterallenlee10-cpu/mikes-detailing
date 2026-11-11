@@ -1,4 +1,4 @@
-import { business, hours, ratings, services, type Service } from "@/content/site";
+import { business, hours, links, ratings, services, type Service } from "@/content/site";
 
 const url = (path = "/") => new URL(path, business.siteUrl).toString();
 const DAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -38,7 +38,8 @@ export function businessSchema() {
       closes: h.close,
     })),
     areaServed: business.areaServed.map((name) => ({ "@type": name.includes("County") ? "AdministrativeArea" : "Place", name: `${name}, MD` })),
-    sameAs: Object.values(business.socials),
+    sameAs: [...Object.values(business.socials), links.mapsListing],
+    hasMap: links.mapsListing,
     knowsAbout: ["Ceramic coating", "Paint correction", "Auto detailing", "Underglow lighting", "Starlight headliners", "Car audio", "Window tint"],
     hasCredential: business.certifications.map((c) => ({
       "@type": "EducationalOccupationalCredential",
