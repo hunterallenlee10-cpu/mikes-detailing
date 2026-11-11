@@ -42,7 +42,7 @@ export function Reviews({ ids, title, compact, headingAs = "h2" }: { ids?: strin
                     <StarIcon key={i} size={14} />
                   ))}
                 </span>
-                <span className="text-xs font-bold text-muted group-hover:text-white">on Google</span>
+                <span className="text-xs font-bold text-muted group-hover:text-white">{ratings.google.reviewCount ? `${ratings.google.reviewCount} Google reviews` : "on Google"}</span>
               </span>
             </a>
             <a href={links.facebookReviews} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 rounded-2xl bg-carbon px-5 py-4 ring-1 ring-white/10 hover:ring-white/30" data-track="reviews_facebook">

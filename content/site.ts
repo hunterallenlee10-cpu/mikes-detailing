@@ -102,7 +102,7 @@ export const hoursDisplay = [
 
 /* ─────────────────────────── Ratings (update as they change) ─────────────── */
 export const ratings = {
-  google: { rating: 5.0, reviewCount: null as number | null }, // [CONFIRM] Google review count → enables star rating in search schema
+  google: { rating: 5.0, reviewCount: 8 as number | null }, // as of Nov 11, 2026 — update as reviews come in (enables star rating in search schema)
   facebook: { recommendPercent: 100, reviewCount: 18 },
 };
 
@@ -581,8 +581,22 @@ export const reviews: Review[] = [
       "…His attention to detail is unmatched, and you can tell he puts his heart into what he does. He doesn't just rush through a job to get it done; he takes his time and makes sure everything is done right. My car looks absolutely amazing…",
     tags: ["auto-detailing"],
   },
-  { id: "carah-p", name: "Carah P.", source: "Google", quote: "Had Michael detail my car and I swear it looks better than when I bought it! My kids take a toll on my car and he was able to make it look so good!…", tags: ["auto-detailing"] },
-  { id: "jacob-w", name: "Jacob W.", source: "Facebook", quote: "Took my RAV4 to Mike for an exterior detail and it looks great. I dropped it off before work and picked it up after…", tags: ["auto-detailing"] },
+  { id: "carah-p", name: "Carah P.", source: "Google", quote: "Had Michael detail my car and I swear it looks better than when I bought it! My kids take a toll on my car and he was able to make it look so good! So happy with how it turned out and will always call Michael from now on!!", tags: ["auto-detailing"] },
+  {
+    id: "jacob-w",
+    name: "Jacob W.",
+    source: "Google & Facebook",
+    quote:
+      "Took my RAV4 to Mike for an exterior detail and it looks great! I dropped it off before work and picked it up after, so it didn't take anything out of my day. He was easy to work with, and you can tell he takes his time…",
+    tags: ["auto-detailing"],
+  },
+  {
+    id: "peachy-g",
+    name: "Peachy G.",
+    source: "Google",
+    quote: "Mike is awesome! He is professional, flexible, punctual, and detail-oriented. I appreciate how openly he communicated about the issues I was experiencing, answered all my questions…",
+    tags: [],
+  },
   {
     id: "fb-tint",
     name: "Facebook review",
