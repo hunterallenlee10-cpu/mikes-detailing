@@ -69,6 +69,26 @@ const PHOTOS = [
     crop: [0, 0.15, 1, 0.86],
   },
   { slug: "c8-underglow-bay", file: "16-c8-underglow-hex-bay.jpg", crop: [0.06, 0, 1, 0.58] },
+  { slug: "c6-corvette-flag", file: "17-c6-corvette-flag-reflection.jpg", crop: [0, 0.1, 1, 0.72] },
+  {
+    slug: "c6-corvette-bay",
+    file: "18-c6-corvette-hex-bay-front.jpg",
+    blur: [[0.765, 0.655, 0.852, 0.712]],
+    crop: [0, 0.14, 1, 0.76],
+  },
+  { slug: "c6-corvette-interior", file: "21-c6-corvette-interior.jpg", crop: [0, 0.12, 1, 0.88] },
+  {
+    slug: "chevelle-71-front",
+    file: "23-71-chevelle-front.jpg",
+    blur: [[0.902, 0.522, 0.972, 0.576]],
+    crop: [0.06, 0.13, 1, 0.63],
+  },
+  {
+    slug: "chevelle-71-rear",
+    file: "22-71-chevelle-rear.jpg",
+    blur: [[0.168, 0.622, 0.23, 0.672]],
+    crop: [0, 0, 1, 0.78],
+  },
 ];
 
 const px = (f, n) => Math.round(f * n);

@@ -91,6 +91,8 @@ How each Drive photo is used:
 | 14 | Grand opening flyer | Reference only — rebuilt as the native Specials component |
 | 15 | T.N. Bowes HVAC van (Nov 2026) | Fleet hero, gallery (plate blurred) |
 | 16 | C8 underglow in the bay (Nov 2026) | Lighting hero + home Lighting card, gallery (replaces the drawn underglow illustration) |
+| 17, 18, 21 | Red C6 Corvette (Nov 2026) | Gallery: front in the bay (plate blurred), flag reflection, interior. 19 (second front shot) and 20 (open hatch) not used. |
+| 22, 23 | '71 Chevelle SS, ceramic coating (Nov 2026) | Gallery: front and rear (vanity plate blurred) |
 
 The script keeps any photo whose original isn't on your machine exactly as it is, so you can add new photos without having every old original.
 

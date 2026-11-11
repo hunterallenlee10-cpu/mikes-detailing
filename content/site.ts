@@ -624,6 +624,8 @@ export type GalleryItem = {
 };
 export const gallery: GalleryItem[] = [
   { photo: "c8-underglow-bay", title: "C8 Corvette — underglow install", caption: "Red underglow wired clean, lit up under the hex lights in the new bay.", alt: "Black C8 Corvette with doors up and red underglow glowing on the shop floor under hexagon LED lights", categories: ["Lighting"] },
+  { photo: "chevelle-71-front", title: "'71 Chevelle SS", caption: "Ceramic coating — deep gloss on the burgundy paint and chrome.", alt: "Burgundy 1971 Chevrolet Chevelle SS on chrome wheels after a ceramic coating, under the hex lights with an American flag on the wall", categories: ["Ceramic"] },
+  { photo: "c6-corvette-bay", title: "Red C6 Corvette", caption: "Inside and out, under the hex lights.", alt: "Red C6 Chevrolet Corvette with chrome wheels, freshly detailed in the hex-lit bay at dusk", categories: ["Detailing"] },
   { photo: "gmc-at4x-igl", title: "2026 GMC 2500HD AT4X", caption: "Wash, mechanical + chemical decon, polish, 4-year IGL ceramic coating.", alt: "Red 2026 GMC Sierra 2500HD AT4X after polish and 4-year IGL ceramic coating", categories: ["Ceramic", "Detailing"] },
   { photo: "monte-carlo-gloss", title: "Procharged 434ci '86 Monte Carlo SS", caption: "Light polish + IGL Professional Arcane 4-year ceramic coating.", alt: "Mirror-like reflections in the black paint of an '86 Monte Carlo SS after IGL coating", categories: ["Ceramic"] },
   { photo: "z06-frunk-engine-bay", title: "2025 C8 Z06", caption: "Wash, frunk + engine bay detail, decon, paint enhancement, professional 4-year ceramic on everything — glass, paint, PPF, wheels, jambs, engine bay, carbon fiber, trim.", alt: "Detailed frunk and engine bay of a 2025 Corvette C8 Z06", categories: ["Ceramic", "Detailing"] },
@@ -634,6 +636,9 @@ export const gallery: GalleryItem[] = [
   { photo: "chevy-trax", title: "2025 Chevy Trax", caption: "Polish + ceramic coating.", alt: "Silver 2025 Chevy Trax after polish and ceramic coating", categories: ["Ceramic"] },
   { photo: "toyota-tacoma", title: "Toyota Tacoma", caption: "Exterior detail.", alt: "Black Toyota Tacoma after an exterior detail", categories: ["Detailing"] },
   { photo: "shop-hex-bay", title: "The new shop", caption: "The hex-lit bay at 26005 Point Lookout Rd — where the audio demos and the gloss happen.", alt: "Black supercar with doors open under the hexagon LED ceiling of the new Leonardtown shop", categories: ["Lighting", "Audio"] },
+  { photo: "chevelle-71-rear", title: "'71 Chevelle SS — rear", caption: "Ceramic coating. The gloss holds from every angle.", alt: "Rear three-quarter view of a burgundy 1971 Chevelle SS with chrome bumper and wheels under the hexagon LED ceiling", categories: ["Ceramic"] },
+  { photo: "c6-corvette-flag", title: "C6 Corvette — reflections", caption: "Clear enough to read the flag in the paint.", alt: "The American flag on the shop wall reflected in the glossy red fender of a C6 Corvette", categories: ["Detailing"] },
+  { photo: "c6-corvette-interior", title: "C6 Corvette — interior", caption: "The inside gets the same attention.", alt: "Clean black leather interior of a red C6 Corvette seen through the open driver's door", categories: ["Detailing"] },
   { photo: "mike-pressure-wash", title: "On the job", caption: "Real person, real work.", alt: "Mike pressure-washing a car, wearing a Mike's Automotive Detailing IGL shirt", categories: ["Detailing"] },
 ];
 
