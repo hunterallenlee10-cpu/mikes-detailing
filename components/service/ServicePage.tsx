@@ -15,6 +15,8 @@ import { QuoteSection } from "../quote/QuoteSection";
 import { LightsOn } from "../fx/LightsOn";
 import { Equalizer } from "../fx/Equalizer";
 import { CeilingBackdrop } from "../hex/HexCeiling";
+import { VideoClip } from "../VideoClip";
+import { BrandStrip } from "./BrandStrip";
 
 const QUOTE_PRESET: Record<ServiceSlug, string[]> = {
   "auto-detailing": ["Full Interior & Exterior Detail"],
@@ -165,6 +167,7 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
             />
             <Equalizer className="mt-12" />
             <p className="mt-3 text-xs text-muted">Visual only — no sound plays on this page.</p>
+            <BrandStrip />
           </Container>
         </section>
       )}
@@ -238,25 +241,33 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
 
       {/* Proof */}
       <section className="relative py-20 sm:py-28" aria-labelledby="proof-title">
-        <Container>
-          <SectionHead
-            eyebrow="Proof"
-            title={
-              <span id="proof-title" className="chrome">
-                {s.proof.headline}
-              </span>
-            }
-            lead={s.proof.body}
-          />
-          {proofReviews.length > 0 && (
-            <ul className={cn("mt-12 grid gap-4", proofReviews.length === 1 ? "max-w-2xl" : proofReviews.length === 2 ? "md:grid-cols-2" : "md:grid-cols-2 lg:grid-cols-3")}>
-              {proofReviews.map((r, i) => (
-                <li key={r!.id} data-reveal data-reveal-delay={i * 90}>
-                  <ReviewCard r={r!} />
-                </li>
-              ))}
-            </ul>
-          )}
+        <Container className={cn(s.proof.video && "grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,21rem)] lg:gap-16")}>
+          <div className="min-w-0">
+            <SectionHead
+              eyebrow="Proof"
+              title={
+                <span id="proof-title" className="chrome">
+                  {s.proof.headline}
+                </span>
+              }
+              lead={s.proof.body}
+            />
+            {proofReviews.length > 0 && (
+              <ul
+                className={cn(
+                  "mt-12 grid gap-4",
+                  proofReviews.length === 1 ? "max-w-2xl" : proofReviews.length === 2 ? "md:grid-cols-2" : s.proof.video ? "md:grid-cols-2" : "md:grid-cols-2 lg:grid-cols-3",
+                )}
+              >
+                {proofReviews.map((r, i) => (
+                  <li key={r!.id} data-reveal data-reveal-delay={i * 90}>
+                    <ReviewCard r={r!} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          {s.proof.video && <VideoClip slug={s.proof.video} className="mx-auto w-full max-w-[21rem]" />}
         </Container>
       </section>
 

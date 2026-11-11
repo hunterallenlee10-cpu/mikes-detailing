@@ -80,6 +80,8 @@ export const links = {
     "Mike's Automotive Detailing Leonardtown MD reviews",
   )}`, // [CONFIRM] swap for his exact Google review link (g.page/r/…)
   facebookReviews: "https://www.facebook.com/Mikes.Auto.Detailing.Services/reviews",
+  /** Google "write a review" link (Google Business Profile → Ask for reviews → copy link, looks like g.page/r/…/review). Leave "" to hide the button. */
+  googleWriteReview: "", // [CONFIRM]
 };
 
 /* ──────────────────────────────── Hours ──────────────────────────────────── */
@@ -122,6 +124,8 @@ export type Promo = {
   banner: string; // one-liner for the top banner
   items: { name: string; price: string; was?: string; note: string; href: string }[];
   terms: string;
+  /** Optional clip shown next to the offer (see `videos` below). */
+  video?: VideoSlug;
 };
 
 export const promos: Promo[] = [
@@ -157,6 +161,7 @@ export const promos: Promo[] = [
       },
     ],
     terms: "New bookings only. Final price depends on vehicle size and condition. Can't be combined with other offers.",
+    video: "water-beading-sealant",
   },
 ];
 
@@ -184,7 +189,7 @@ export type Service = {
   intro: string;
   included: { title: string; body: string }[];
   forWho: string[];
-  proof: { headline: string; body: string; reviewIds: string[] };
+  proof: { headline: string; body: string; reviewIds: string[]; video?: VideoSlug };
   pricing: { label: string; value: string; note?: string }[];
   faqs: { q: string; a: string }[];
   feature?: "water" | "process" | "lights" | "audio";
@@ -340,8 +345,8 @@ export const services: Service[] = [
     short: "Lighting",
     card: "LowGlow Certified Dealer & Installer. Underglow, rock lights, starlight headliners, ambient kits — no exposed wiring.",
     accent: "neon",
-    photo: "shop-hex-ceiling",
-    photoAlt: "Hexagon LED light ceiling glowing over the bay at the Leonardtown shop",
+    photo: "c8-underglow-bay",
+    photoAlt: "Black C8 Corvette with doors up and red underglow lit, under the hexagon LED ceiling at the Leonardtown shop",
     seo: {
       title: "Underglow, Starlight Headliners & Ambient Lighting in Leonardtown, MD | LowGlow Certified | Mike's",
       description:
@@ -404,6 +409,7 @@ export const services: Service[] = [
       { title: "Speaker installs", body: "Clarity you can actually hear at highway speed." },
       { title: "Clean wiring", body: "Top-notch, hidden, done right — same standard as our lighting." },
       { title: "In-shop listening demo", body: "Bring your playlist. Hear it before you buy." },
+      { title: "Name brands", body: "Skar Audio, Focal, Memphis, Sundown, JL Audio, AudioControl, Rockford Fosgate and more." },
     ],
     forWho: ["Factory systems that sound flat", "Bass heads", "Anyone who wants it clean and reliable", "Budget builds — we'll make it hit"],
     proof: {
@@ -415,6 +421,7 @@ export const services: Service[] = [
     faqs: [
       { q: "Can I hear the audio before I buy?", a: "Yes! Come in and play whatever song you'd like." },
       { q: "Do you do budget builds?", a: "Yes — from budget builds to custom-made audio equipment." },
+      { q: "What audio brands do you install?", a: "Skar Audio, Focal, Memphis Car Audio, Sundown Audio, JL Audio, AudioControl, Rockford Fosgate and more. Ask about anything you have your eye on." },
     ],
     feature: "audio",
   },
@@ -443,8 +450,9 @@ export const services: Service[] = [
     forWho: ["Got a ticket for your tint", "Old purple, bubbling film", "Trucks other shops passed on", "Fresh new rides"],
     proof: {
       headline: "“Guess Mike didn't get the memo.”",
-      body: "A truck that's notoriously difficult to tint — not a single blemish or bubble.",
+      body: "A truck that's notoriously difficult to tint — not a single blemish or bubble. And when the T.N. Bowes Heating & Air crew picked up their van? Hit play.",
       reviewIds: ["fb-tint"],
+      video: "tnb-tint-a1",
     },
     pricing: [
       { label: "Tint removal", value: `from $${prices.tintRemovalPerWindow}/window` },
@@ -459,14 +467,14 @@ export const services: Service[] = [
     slug: "fleet",
     name: "Fleet & Work Truck Detailing",
     short: "Fleet",
-    card: "Work trucks and fleets kept spotless — a local fleet has trusted us since 2022.",
+    card: "Work trucks, vans and fleets kept spotless — a local fleet has trusted us since 2022.",
     accent: "red",
-    photo: "gmc-at4x-igl",
-    photoAlt: "Red heavy-duty GMC pickup truck, freshly detailed and coated",
+    photo: "tnb-van-fleet",
+    photoAlt: "T.N. Bowes Heating & Air Conditioning service van in the hex-lit bay at Mike's shop",
     seo: {
       title: "Fleet & Work Truck Detailing in Southern Maryland | Mike's Automotive Detailing",
       description:
-        "Fleet and work truck detailing for Southern Maryland businesses. Keep every vehicle looking professional. Trusted by a local fleet since 2022.",
+        "Fleet, work truck and work van detailing and window tint for Southern Maryland businesses. Keep every vehicle looking professional. Trusted by a local fleet since 2022.",
       h1: "Fleet & Work Truck Detailing in Southern Maryland",
     },
     eyebrow: "For businesses",
@@ -475,13 +483,15 @@ export const services: Service[] = [
     included: [
       { title: "Interior & exterior", body: "Work-truck interiors that actually come clean." },
       { title: "Protection", body: "Sealants or ceramic to make the next wash faster." },
+      { title: "Window tint", body: "Clean, bubble-free tint for work vans and trucks — like the T.N. Bowes Heating & Air van." },
       { title: "Scheduling", body: "Drop-off windows that keep your crews moving." },
     ],
-    forWho: ["Contractors", "Service companies", "Dealerships", "Anyone running more than one vehicle"],
+    forWho: ["Contractors & HVAC companies", "Service vans", "Dealerships", "Anyone running more than one vehicle"],
     proof: {
       headline: "Spotless since 2022.",
-      body: "A commercial customer has trusted Mike with their truck fleet since 2022.",
+      body: "A commercial customer has trusted Mike with their truck fleet since 2022. And here's the T.N. Bowes Heating & Air crew picking up their service van.",
       reviewIds: ["kirk-b"],
+      video: "tnb-tint-a1",
     },
     pricing: [{ label: "Fleet programs", value: "Quote", note: "Based on fleet size and schedule." }],
     faqs: [{ q: "Do you detail fleets and work trucks?", a: "Yes. We've kept a local fleet spotless since 2022. Call or text to set up a schedule." }],
@@ -585,8 +595,8 @@ export const reviews: Review[] = [
 export const reviewById = (id: string) => reviews.find((r) => r.id === id);
 
 /* ──────────────────────────────── Gallery ────────────────────────────────── */
-export type GalleryCategory = "Detailing" | "Ceramic" | "Lighting" | "Audio";
-export const galleryCategories: GalleryCategory[] = ["Detailing", "Ceramic", "Lighting", "Audio"];
+export type GalleryCategory = "Detailing" | "Ceramic" | "Lighting" | "Audio" | "Fleet";
+export const galleryCategories: GalleryCategory[] = ["Detailing", "Ceramic", "Lighting", "Audio", "Fleet"];
 export type GalleryItem = {
   /** A real photo… */
   photo?: PhotoSlug;
@@ -598,18 +608,84 @@ export type GalleryItem = {
   categories: GalleryCategory[];
 };
 export const gallery: GalleryItem[] = [
+  { photo: "c8-underglow-bay", title: "C8 Corvette — underglow install", caption: "Red underglow wired clean, lit up under the hex lights in the new bay.", alt: "Black C8 Corvette with doors up and red underglow glowing on the shop floor under hexagon LED lights", categories: ["Lighting"] },
   { photo: "gmc-at4x-igl", title: "2026 GMC 2500HD AT4X", caption: "Wash, mechanical + chemical decon, polish, 4-year IGL ceramic coating.", alt: "Red 2026 GMC Sierra 2500HD AT4X after polish and 4-year IGL ceramic coating", categories: ["Ceramic", "Detailing"] },
   { photo: "monte-carlo-gloss", title: "Procharged 434ci '86 Monte Carlo SS", caption: "Light polish + IGL Professional Arcane 4-year ceramic coating.", alt: "Mirror-like reflections in the black paint of an '86 Monte Carlo SS after IGL coating", categories: ["Ceramic"] },
   { photo: "z06-frunk-engine-bay", title: "2025 C8 Z06", caption: "Wash, frunk + engine bay detail, decon, paint enhancement, professional 4-year ceramic on everything — glass, paint, PPF, wheels, jambs, engine bay, carbon fiber, trim.", alt: "Detailed frunk and engine bay of a 2025 Corvette C8 Z06", categories: ["Ceramic", "Detailing"] },
   { photo: "jeep-gladiator", title: "Jeep Gladiator", caption: "Detailed wash, mechanical + chemical decon, 6-month ceramic sealant.", alt: "Grey Jeep Gladiator after wash, decontamination and ceramic sealant", categories: ["Detailing", "Ceramic"] },
   { photo: "ford-explorer", title: "2021 Ford Explorer", caption: "Full exterior detail, paint decon, 6–9 month sealant.", alt: "Grey 2021 Ford Explorer after a full exterior detail", categories: ["Detailing"] },
-  { art: "underglow", title: "2025 C8 Z06 — underglow install", caption: "Hidden-wiring underglow install: harness re-run and extended so the cutoff switch sits inside — nothing exposed at the battery. (Illustration — ask Mike to see the real thing.)", alt: "Illustration of a sports car with glowing cyan-to-magenta underglow", categories: ["Lighting"] },
+  { photo: "tnb-van-fleet", title: "T.N. Bowes Heating & Air — service van", caption: "Fleet work: bubble-free window tint on a Ford Transit service van.", alt: "Red T.N. Bowes Heating & Air Conditioning Ford Transit van under the hexagon LED ceiling", categories: ["Fleet"] },
   { photo: "z06-foam-wash", title: "2025 C8 Z06 — the wash", caption: "Foam first, always. Every detail starts with a detailed wash.", alt: "Corvette Z06 covered in thick foam during a detailed wash", categories: ["Detailing"] },
   { photo: "chevy-trax", title: "2025 Chevy Trax", caption: "Polish + ceramic coating.", alt: "Silver 2025 Chevy Trax after polish and ceramic coating", categories: ["Ceramic"] },
   { photo: "toyota-tacoma", title: "Toyota Tacoma", caption: "Exterior detail.", alt: "Black Toyota Tacoma after an exterior detail", categories: ["Detailing"] },
   { photo: "shop-hex-bay", title: "The new shop", caption: "The hex-lit bay at 26005 Point Lookout Rd — where the audio demos and the gloss happen.", alt: "Black supercar with doors open under the hexagon LED ceiling of the new Leonardtown shop", categories: ["Lighting", "Audio"] },
   { photo: "mike-pressure-wash", title: "On the job", caption: "Real person, real work.", alt: "Mike pressure-washing a car, wearing a Mike's Automotive Detailing IGL shirt", categories: ["Detailing"] },
 ];
+
+/* ──────────────────────────────── Videos ─────────────────────────────────── */
+// Clips live in public/videos/<slug>.mp4 with a poster at public/videos/<slug>.webp.
+// `sound: true` = tap to play with sound. `sound: false` = plays muted on a loop when on screen.
+export type VideoSlug = "tnb-tint-a1" | "water-beading-sealant";
+export type Video = { slug: VideoSlug; title: string; caption: string; label: string; width: number; height: number; sound: boolean };
+export const videos: Record<VideoSlug, Video> = {
+  "tnb-tint-a1": {
+    slug: "tnb-tint-a1",
+    title: "“My man Mike — A1.”",
+    caption: "The T.N. Bowes Heating & Air crew picking up their service van with fresh tint.",
+    label: "Video: a T.N. Bowes Heating & Air technician next to their red service van says “My man Mike, A1. Check out them tints, baby — woo!”",
+    width: 720,
+    height: 1280,
+    sound: true,
+  },
+  "water-beading-sealant": {
+    slug: "water-beading-sealant",
+    title: "Watch it bead.",
+    caption: "Rinse after a 3-month paint sealant — water beads up and sheets right off.",
+    label: "Video: pressure-washer rinse on a black Toyota hood under the hex lights; water beads and sheets off the sealed paint",
+    width: 720,
+    height: 896,
+    sound: false,
+  },
+};
+/** Clips shown in the gallery's "On video" row, in order. Add Mike-at-work clips here. */
+export const galleryVideos: VideoSlug[] = ["tnb-tint-a1", "water-beading-sealant"];
+
+/* ──────────────────────────────── Audio brands ───────────────────────────── */
+// Official logos in public/images/brands (shown flat white). width/height = the file's proportions.
+// No `file` → the name is shown as text until we have the official logo.
+export const audioBrands: { name: string; file?: string; width: number; height: number }[] = [
+  { name: "Skar Audio", file: "skar.svg", width: 1991, height: 606 },
+  { name: "Focal", file: "focal.svg", width: 284, height: 59 },
+  { name: "Memphis Car Audio", file: "memphis.png", width: 640, height: 93 },
+  { name: "Sundown Audio", file: "sundown.png", width: 640, height: 172 },
+  { name: "JL Audio", width: 0, height: 0 }, // [CONFIRM] official JL Audio logo file (ask JL/Garmin dealer support)
+  { name: "Rockford Fosgate", file: "rockford-fosgate.svg", width: 183, height: 31 },
+  { name: "AudioControl", file: "audiocontrol.svg", width: 257, height: 21 },
+];
+
+/* ─────────────────────────────── Refer a friend ──────────────────────────── */
+// Customers make a personal link on /refer. When a friend opens it, the friend's quote
+// request arrives with "Referred by: <name>", so Mike knows who to thank.
+export const referral = {
+  forYou: "$25 off your next service", // [CONFIRM] Mike's reward for the person who refers
+  forFriend: "$25 off their first service", // [CONFIRM] reward for the new customer
+  terms:
+    "Reward applies after your friend's first paid service. New customers only. One reward per new customer. Rewards can't be exchanged for cash or combined with other offers.", // [CONFIRM]
+};
+
+/* ──────────────────────────────── Gift cards ─────────────────────────────── */
+// Fill in whichever Mike sets up. Until then, "Text Mike to order" is always there.
+//  • squareUrl – Square eGift Card page (Square Dashboard → Gift Cards → eGift cards). Buyers pay by card,
+//    the card is emailed/texted to the recipient and can be added to Apple Wallet.
+//  • venmo     – Venmo *Business* profile username (no @). Personal Venmo can't be used for business payments.
+//  • paypal    – PayPal.me username.
+export const giftCards = {
+  squareUrl: "", // [CONFIRM]
+  venmo: "", // [CONFIRM]
+  paypal: "", // [CONFIRM]
+  amounts: [50, 100, 150, 250, 350],
+  terms: "Good toward any service at Mike's Automotive Detailing. No cash value. Treat it like cash — Mike can look up and reissue a lost certificate.", // [CONFIRM]
+};
 
 /* ─────────────────────────────── General FAQ ─────────────────────────────── */
 const travelAnswer =
@@ -638,6 +714,12 @@ export const faqs: { q: string; a: string }[] = [
 ];
 
 /* ──────────────────────────────── Navigation ─────────────────────────────── */
+/** Extra footer links. */
+export const footerExtras = [
+  { label: "Refer a Friend", href: "/refer" },
+  { label: "Gift Cards", href: "/gift-cards" },
+];
+
 export const nav = [
   { label: "Gallery", href: "/gallery" },
   { label: "Reviews", href: "/reviews" },

@@ -10,6 +10,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/reviews", priority: 0.7 },
     { path: "/about", priority: 0.6 },
     { path: "/contact", priority: 0.8 },
+    { path: "/gift-cards", priority: 0.5 },
+    { path: "/refer", priority: 0.4 },
     { path: "/privacy", priority: 0.2 },
   ];
   return pages.map((p) => ({ url: `${base}${p.path}`, changeFrequency: "monthly", priority: p.priority }));
