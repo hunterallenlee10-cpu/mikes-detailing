@@ -66,6 +66,8 @@ export const business = {
 
 export const SMS_PREFILL = "Hey Mike! I found you on your website and I'd like a quote. My vehicle is a ";
 
+const GOOGLE_PROFILE_SEARCH = "https://www.google.com/search?q=Mikes+Automotive+Detailing+Leonardtown+MD";
+
 export const links = {
   tel: `tel:${business.phone.e164}`,
   sms: `sms:${business.phone.e164}?&body=${encodeURIComponent(SMS_PREFILL)}`,
@@ -73,15 +75,13 @@ export const links = {
   directions: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
     "Mike's Automotive Detailing, 26005 Point Lookout Rd, Leonardtown, MD 20650",
   )}`,
-  mapsListing: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    "Mike's Automotive Detailing 26005 Point Lookout Rd Leonardtown MD 20650",
-  )}`,
-  googleReviews: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    "Mike's Automotive Detailing Leonardtown MD reviews",
-  )}`, // [CONFIRM] swap for his exact Google review link (g.page/r/…)
+  /** His Google Business Profile (place ID 0xa03e8ce35b1c1b2b:0x7c84c48ae1534f5, CID 560782028649608437). */
+  mapsListing: "https://www.google.com/maps?cid=560782028649608437",
+  /** Opens his Google reviews panel (",1" = read reviews). */
+  googleReviews: `${GOOGLE_PROFILE_SEARCH}#lrd=0xa03e8ce35b1c1b2b:0x7c84c48ae1534f5,1,,,,`,
   facebookReviews: "https://www.facebook.com/Mikes.Auto.Detailing.Services/reviews",
   /** Google "write a review" link (Google Business Profile → Ask for reviews → copy link, looks like g.page/r/…/review). Leave "" to hide the button. */
-  googleWriteReview: "", // [CONFIRM]
+  googleWriteReview: `${GOOGLE_PROFILE_SEARCH}#lrd=0xa03e8ce35b1c1b2b:0x7c84c48ae1534f5,3,,,,`, // ",3" = opens "Write a review"
 };
 
 /* ──────────────────────────────── Hours ──────────────────────────────────── */
