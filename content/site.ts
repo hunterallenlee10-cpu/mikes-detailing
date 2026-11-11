@@ -666,13 +666,13 @@ export const galleryVideos: VideoSlug[] = ["tnb-tint-a1", "water-beading-sealant
 
 /* ──────────────────────────────── Audio brands ───────────────────────────── */
 // Official logos in public/images/brands (shown flat white). width/height = the file's proportions.
-// No `file` → the name is shown as text until we have the official logo.
-export const audioBrands: { name: string; file?: string; width: number; height: number }[] = [
+// No `file` → the name is shown as text until we have the official logo. `scale` nudges a logo's size by eye (1 = default).
+export const audioBrands: { name: string; file?: string; width: number; height: number; scale?: number }[] = [
   { name: "Skar Audio", file: "skar.svg", width: 1991, height: 606 },
   { name: "Focal", file: "focal.svg", width: 284, height: 59 },
   { name: "Memphis Car Audio", file: "memphis.png", width: 640, height: 93 },
   { name: "Sundown Audio", file: "sundown.png", width: 640, height: 172 },
-  { name: "JL Audio", width: 0, height: 0 }, // [CONFIRM] official JL Audio logo file (ask JL/Garmin dealer support)
+  { name: "JL Audio", file: "jl-audio.png", width: 600, height: 565, scale: 0.95 },
   { name: "Rockford Fosgate", file: "rockford-fosgate.svg", width: 183, height: 31 },
   { name: "AudioControl", file: "audiocontrol.svg", width: 257, height: 21 },
 ];
