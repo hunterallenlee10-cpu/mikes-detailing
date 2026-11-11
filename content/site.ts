@@ -44,8 +44,9 @@ export const business = {
   timezone: "America/New_York",
   bookingUrl: BOOKING_URL,
   areaServed: ["Leonardtown", "St. Mary's County", "Calvert County", "Charles County", "Southern Maryland"],
-  /** Mobile / on-site service now that the shop is open? Controls the "We will travel" copy + FAQ answer. */
-  offersMobileService: null as boolean | null, // [CONFIRM] true = yes, false = shop only, null = "ask Mike"
+  /** Mobile / on-site service now that the shop is open? Controls the "Do you travel?" FAQ answer.
+   *  Mike (Nov 2026): both — mobile has a travel fee, and it's shop-only during the cold season. */
+  offersMobileService: true as boolean | null,
   socials: {
     instagram: "https://www.instagram.com/mikesautomotivedetailing/",
     facebook: "https://www.facebook.com/Mikes.Auto.Detailing.Services",
@@ -87,16 +88,17 @@ export const links = {
 
 /* ──────────────────────────────── Hours ──────────────────────────────────── */
 // day: 0 = Sunday … 6 = Saturday. 24-hour times, Eastern time.
+// A day can have more than one entry — weekdays have a midday break (lunch + gym) from 11 to 2.
 export const hours: { day: number; open: string; close: string }[] = [
-  { day: 1, open: "07:00", close: "18:00" },
-  { day: 2, open: "07:00", close: "18:00" },
-  { day: 3, open: "07:00", close: "18:00" },
-  { day: 4, open: "07:00", close: "18:00" },
-  { day: 5, open: "07:00", close: "18:00" },
+  ...[1, 2, 3, 4, 5].flatMap((day) => [
+    { day, open: "08:00", close: "11:00" },
+    { day, open: "14:00", close: "20:00" },
+  ]),
   { day: 6, open: "09:00", close: "15:00" },
 ];
 export const hoursDisplay = [
-  { label: "Mon – Fri", value: "7:00 AM – 6:00 PM" },
+  { label: "Mon – Fri", value: "8:00 AM – 8:00 PM" },
+  { label: "Midday break", value: "11:00 AM – 2:00 PM" }, // Mon – Fri (shown right under the Mon – Fri row)
   { label: "Saturday", value: "9:00 AM – 3:00 PM" },
   { label: "Sunday", value: "Closed" },
 ];
@@ -135,7 +137,7 @@ export const promos: Promo[] = [
     title: "Grand Opening Specials",
     kicker: "New Leonardtown shop · 4 weeks only",
     startsAt: "2026-10-24T00:00:00-04:00", // announced Oct 24, 2026; doors opened Mon Oct 26
-    endsAt: "2026-11-21T23:59:59-05:00", // [CONFIRM] "four weeks" from Oct 24 = Nov 21, from Oct 26 = Nov 23
+    endsAt: "2026-11-21T23:59:59-05:00", // confirmed by Mike (Nov 2026)
     banner: "Grand Opening Specials — Full Detail $279 · IGL Ceramic from $1,299",
     items: [
       { name: "Full Interior & Exterior Detail", price: "$279", was: "$350", note: "First 20 bookings. No polishing included.", href: "/auto-detailing" },
@@ -151,7 +153,7 @@ export const promos: Promo[] = [
     title: "Fall Exterior Special",
     kicker: "Beat the winter road salt",
     startsAt: "2026-11-07T00:00:00-05:00", // first posted Nov 7, 2026
-    endsAt: "2026-11-30T23:59:59-05:00", // [CONFIRM] end date (posts only say "limited spots")
+    endsAt: "2026-11-30T23:59:59-05:00", // confirmed by Mike (Nov 2026)
     banner: "Fall Exterior Special — $100 wash + 3-month sealant + tire coating",
     items: [
       {
@@ -239,7 +241,7 @@ export const services: Service[] = [
       { label: "Exterior or interior only", value: "Quote", note: "Based on vehicle size and condition." },
     ],
     faqs: [
-      { q: "Can I drop my car off before work?", a: "Yes. Plenty of customers drop off in the morning and pick up after work — the shop opens at 7:00 AM on weekdays." },
+      { q: "Can I drop my car off before work?", a: "Yes. Plenty of customers drop off in the morning and pick up after work — the shop opens at 8:00 AM on weekdays and is open until 8:00 PM." },
       { q: "Does the full detail include polishing?", a: "No. The full interior & exterior detail is a deep clean inside and out. Removing swirls and scratches is paint correction, which we quote separately." },
       { q: "Can you get pet hair out?", a: "Yes — pet hair removal is part of our interior detail." },
       { q: "Do you detail engine bays?", a: "Yes. Engine bay and frunk/trunk area details are available on their own or added to any detail." },
@@ -687,8 +689,8 @@ export const audioBrands: { name: string; file?: string; width: number; height: 
 // Customers make a personal link on /refer. When a friend opens it, the friend's quote
 // request arrives with "Referred by: <name>", so Mike knows who to thank.
 export const referral = {
-  forYou: "$25 off your next service", // [CONFIRM] Mike's reward for the person who refers
-  forFriend: "$25 off their first service", // [CONFIRM] reward for the new customer
+  forYou: "10% off your next service", // Mike (Nov 2026): 10% off
+  forFriend: "10% off their first service",
   terms:
     "Reward applies after your friend's first paid service. New customers only. One reward per new customer. Rewards can't be exchanged for cash or combined with other offers.", // [CONFIRM]
 };
@@ -710,7 +712,7 @@ export const giftCards = {
 /* ─────────────────────────────── General FAQ ─────────────────────────────── */
 const travelAnswer =
   business.offersMobileService === true
-    ? "Yes — we will travel! Call or text to set up on-site service anywhere in Southern Maryland."
+    ? "Yes — mobile service is available anywhere in Southern Maryland for an added travel fee. During the cold season, all work is done at the shop on Point Lookout Rd. Call or text to set it up."
     : business.offersMobileService === false
       ? "Our work is done at the new shop on Point Lookout Rd, where we have the lighting, power and space to do it right."
       : "Most work happens at the new shop on Point Lookout Rd. Need on-site service? Call or text Mike and ask — he's covered all of Southern Maryland.";
@@ -728,7 +730,7 @@ export const faqs: { q: string; a: string }[] = [
   services[6].faqs[0],
   {
     q: "Where are you, and what are your hours?",
-    a: "26005 Point Lookout Rd, Leonardtown, MD 20650 — look for our sign on the road board. Mon–Fri 7:00 AM–6:00 PM, Saturday 9:00 AM–3:00 PM, closed Sunday. Stop by any time we're open — we love when customers come in and chat.",
+    a: "26005 Point Lookout Rd, Leonardtown, MD 20650 — look for our sign on the road board. Mon–Fri 8:00 AM–8:00 PM (closed 11:00 AM–2:00 PM for a midday break), Saturday 9:00 AM–3:00 PM, closed Sunday. Stop by any time we're open — we love when customers come in and chat.",
   },
   { q: "Do you travel?", a: travelAnswer },
 ];

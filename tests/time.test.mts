@@ -53,6 +53,38 @@ test("daylight saving: summer weekday 6:30pm EDT is closed", () => {
   assert.equal(openStatus(new Date("2026-07-14T21:30:00Z"), HOURS, TZ).open, true); // 5:30 PM EDT
 });
 
+// Mike's hours from Nov 2026: Mon–Fri 8–11 and 2–8 (midday break), Sat 9–3.
+const SPLIT = [1, 2, 3, 4, 5]
+  .flatMap((day) => [
+    { day, open: "08:00", close: "11:00" },
+    { day, open: "14:00", close: "20:00" },
+  ])
+  .concat([{ day: 6, open: "09:00", close: "15:00" }]);
+
+test("split day: open in the morning block", () => {
+  const s = openStatus(new Date("2026-11-10T14:00:00Z"), SPLIT, TZ); // Tue 9 AM EST
+  assert.equal(s.open, true);
+  assert.equal(s.detail, "Until 11 AM today");
+});
+
+test("split day: closed over the midday break, back at 2", () => {
+  const s = openStatus(new Date("2026-11-10T17:00:00Z"), SPLIT, TZ); // Tue 12 PM EST
+  assert.equal(s.open, false);
+  assert.equal(s.detail, "Opens today at 2 PM");
+});
+
+test("split day: open in the afternoon block until 8", () => {
+  const s = openStatus(new Date("2026-11-10T20:00:00Z"), SPLIT, TZ); // Tue 3 PM EST
+  assert.equal(s.open, true);
+  assert.equal(s.detail, "Until 8 PM today");
+});
+
+test("split day: after 8pm, opens tomorrow at 8", () => {
+  const s = openStatus(new Date("2026-11-11T01:30:00Z"), SPLIT, TZ); // Tue 8:30 PM EST
+  assert.equal(s.open, false);
+  assert.equal(s.detail, "Opens tomorrow at 8 AM");
+});
+
 const PROMOS = [
   { id: "grand", startsAt: "2026-10-24T00:00:00-04:00", endsAt: "2026-11-21T23:59:59-05:00" },
   { id: "fall", startsAt: "2026-09-22T00:00:00-04:00", endsAt: "2026-11-30T23:59:59-05:00" },
