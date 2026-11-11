@@ -158,19 +158,18 @@ Also verified: zero TypeScript/ESLint errors, no console errors, no horizontal o
 
 Updated Nov 11, 2026 after checking his Instagram, TikTok and Google listing (Facebook is login-walled). Everything is wired up — just update `content/site.ts` once Mike answers.
 
+**Answered by Mike (Nov 11, 2026):** referral reward 10% off · hours Mon–Fri 8–8 with an 11–2 midday break, Sat 9–3 · Fall Special ends Nov 30 · Grand Opening ends Nov 21 · mobile service yes, with a travel fee, shop-only in the cold season.
+
 **Still need Mike:**
 
-1. **Referral rewards** — site says $25 off for both people (`referral`). Placeholder until Mike picks the real reward.
-2. **Gift cards** — how he wants to take payment: Square eGift link, Venmo Business username, and/or PayPal.me → `giftCards`. Also confirm the terms line.
-3. **Hours** — the site says Mon–Fri 7–6, Sat 9–3, Sun closed; his Google listing says Mon–Sat 7 AM–7 PM, Sun 10 AM–6 PM. Which is right? → `hours` + `hoursDisplay` (and fix Google to match).
-4. **Fall Exterior Special end date** — first posted Nov 7, still "limited spots" on Nov 10; site assumes it ends **Nov 30** → `promos[1].endsAt`.
-5. **Grand Opening end date** — announced Oct 24, doors opened Mon Oct 26, "four weeks only". Site ends it **Nov 21**; counting from Oct 26 it would be Nov 23 → `promos[0].endsAt`.
-6. **Mobile / on-site service** — last "We will travel!" post was Sept 11 (before the shop). Still offered? → `business.offersMobileService`.
-7. **More photos/videos** — recent photos of the nicer cars and short clips of Mike working (originals straight from his phone, not screenshots).
+1. **Gift cards** — his PayPal.me username (the link he texted only showed a preview) → `giftCards.paypal`. Also confirm the terms line.
+2. **Referral** — is "10% off" for both the referrer and the new customer? Site assumes both.
+3. **Red C6 Corvette** — what service it got (caption currently just says "Inside and out").
+4. **More photos/videos** — short clips of Mike working (originals straight from his phone, not screenshots).
 
 **Optional (site is fine without):** is the C8 underglow car (also the car in the hex-light shop photo) the 2025 Z06? · tint film brand · IGL warranty terms beyond "4-year" · LowGlow discount code (he isn't in LowGlow's public installer locator yet) · official IGL/LowGlow badge images.
 
-**Mike's Google Business Profile to-dos:** category "Car wash" → "Car detailing service"; website → `https://www.mikesautomotivedetailingmd.com`; show the shop address; make the hours match.
+**Mike's Google Business Profile to-dos:** category "Car wash" → "Car detailing service"; website → `https://www.mikesautomotivedetailingmd.com`; show the shop address; hours → Mon–Fri 8–11 AM and 2–8 PM, Sat 9–3, Sun closed (Google allows two time ranges per day).
 
 **Resolved:** booking link (none — his posts say DM or call/text, so "Book Online" opens the quote form) · ceramic "from" price ($1,500, per the Oct 24 flyer) · Google review links + count · domain (`www.mikesautomotivedetailingmd.com`) · audio brands incl. JL Audio · underglow photo.
 

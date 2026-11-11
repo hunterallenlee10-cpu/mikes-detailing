@@ -33,26 +33,27 @@ export function formatTime(hhmm: string) {
 
 export type OpenStatus = { open: boolean; label: string; detail: string };
 
-/** Is the shop open at `date`? Returns a short label + detail for the UI. */
+/** Is the shop open at `date`? Returns a short label + detail for the UI.
+ *  A day can have more than one entry (e.g. a midday break: 8–11 and 2–8). */
 export function openStatus(date: Date, hours: DayHours[], timeZone: string): OpenStatus {
   const { day, minutes } = zonedParts(date, timeZone);
-  const today = hours.find((h) => h.day === day);
-  if (today && minutes >= toMin(today.open) && minutes < toMin(today.close)) {
-    const left = toMin(today.close) - minutes;
+  const rangesOn = (d: number) => hours.filter((h) => h.day === d).sort((a, b) => toMin(a.open) - toMin(b.open));
+  const now = rangesOn(day).find((h) => minutes >= toMin(h.open) && minutes < toMin(h.close));
+  if (now) {
+    const left = toMin(now.close) - minutes;
     return {
       open: true,
       label: "Open now",
-      detail: left <= 60 ? `Closing soon · until ${formatTime(today.close)}` : `Until ${formatTime(today.close)} today`,
+      detail: left <= 60 ? `Closing soon · until ${formatTime(now.close)}` : `Until ${formatTime(now.close)} today`,
     };
   }
   // Find next opening.
   for (let i = 0; i < 8; i++) {
     const d = (day + i) % 7;
-    const h = hours.find((x) => x.day === d);
-    if (!h) continue;
-    if (i === 0 && minutes >= toMin(h.open)) continue;
+    const next = rangesOn(d).find((h) => !(i === 0 && minutes >= toMin(h.open)));
+    if (!next) continue;
     const when = i === 0 ? "today" : i === 1 ? "tomorrow" : DAY_NAMES[d];
-    return { open: false, label: "Closed", detail: `Opens ${when} at ${formatTime(h.open)}` };
+    return { open: false, label: "Closed", detail: `Opens ${when} at ${formatTime(next.open)}` };
   }
   return { open: false, label: "Closed", detail: "" };
 }
