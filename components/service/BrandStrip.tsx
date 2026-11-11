@@ -28,7 +28,7 @@ export function BrandStrip() {
                   loading="lazy"
                   decoding="async"
                   className="w-auto max-w-full object-contain opacity-90 [filter:brightness(0)_invert(1)]"
-                  style={{ height: `${(4.6 / Math.sqrt(ratio)).toFixed(2)}rem` }}
+                  style={{ height: `${((4.6 / Math.sqrt(ratio)) * (b.scale ?? 1)).toFixed(2)}rem` }}
                 />
               ) : (
                 <span className="font-wide text-xl font-black tracking-wide text-white uppercase sm:text-2xl">{b.name}</span>
