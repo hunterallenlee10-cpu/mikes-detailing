@@ -158,11 +158,11 @@ Also verified: zero TypeScript/ESLint errors, no console errors, no horizontal o
 
 Updated Nov 11, 2026 after checking his Instagram, TikTok and Google listing (Facebook is login-walled). Everything is wired up — just update `content/site.ts` once Mike answers.
 
-**Answered by Mike (Nov 11, 2026):** referral reward 10% off · hours Mon–Fri 8–8 with an 11–2 midday break, Sat 9–3 · Fall Special ends Nov 30 · Grand Opening ends Nov 21 · mobile service yes, with a travel fee, shop-only in the cold season.
+**Answered by Mike (Nov 11, 2026):** referral reward 10% off · gift card payments via PayPal.me/MikesAutoCareService · hours Mon–Fri 8–8 with an 11–2 midday break, Sat 9–3 · Fall Special ends Nov 30 · Grand Opening ends Nov 21 · mobile service yes, with a travel fee, shop-only in the cold season.
 
 **Still need Mike:**
 
-1. **Gift cards** — his PayPal.me username (the link he texted only showed a preview) → `giftCards.paypal`. Also confirm the terms line.
+1. **Gift cards** — PayPal is set up (`paypal.me/MikesAutoCareService`); just confirm the terms line in `giftCards.terms`.
 2. **Referral** — is "10% off" for both the referrer and the new customer? Site assumes both.
 3. **Red C6 Corvette** — what service it got (caption currently just says "Inside and out").
 4. **More photos/videos** — short clips of Mike working (originals straight from his phone, not screenshots).

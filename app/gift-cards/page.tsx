@@ -14,14 +14,19 @@ export const metadata = pageMeta({
 
 export default function GiftCardsPage() {
   const online = Boolean(giftCards.squareUrl);
+  const payApp = giftCards.paypal ? "PayPal" : giftCards.venmo ? "Venmo" : "";
   const steps = [
     { t: "Pick an amount", b: `Any amount works. A full interior & exterior detail is $${prices.fullDetail}.` },
     online
       ? { t: "Pay online", b: "Checkout takes a minute. The gift card is emailed or texted to whoever you choose." }
-      : { t: "Text Mike", b: "Tap “Text Mike to order” — he'll send you a quick way to pay." },
+      : payApp
+        ? { t: `Pay with ${payApp}`, b: `Tap “Pay with ${payApp}” — the amount you picked is filled in. Rather pay another way? Text Mike.` }
+        : { t: "Text Mike", b: "Tap “Text Mike to order” — he'll send you a quick way to pay." },
     online
       ? { t: "They book", b: "They can keep it in their email or add it to Apple Wallet, then show it at the shop." }
-      : { t: "Send it", b: "Mike sends you a gift certificate to print or forward — they show it at the shop." },
+      : payApp
+        ? { t: "Tell Mike who it's for", b: "Text Mike after you pay. He sends a gift certificate to print or forward — they show it at the shop." }
+        : { t: "Send it", b: "Mike sends you a gift certificate to print or forward — they show it at the shop." },
   ];
   return (
     <>

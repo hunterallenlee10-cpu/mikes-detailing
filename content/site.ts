@@ -704,7 +704,7 @@ export const referral = {
 export const giftCards = {
   squareUrl: "", // [CONFIRM]
   venmo: "", // [CONFIRM]
-  paypal: "", // [CONFIRM]
+  paypal: "MikesAutoCareService", // paypal.me/MikesAutoCareService (from Mike, Nov 2026)
   amounts: [50, 100, 150, 250, 350],
   terms: "Good toward any service at Mike's Automotive Detailing. No cash value. Treat it like cash — Mike can look up and reissue a lost certificate.", // [CONFIRM]
 };

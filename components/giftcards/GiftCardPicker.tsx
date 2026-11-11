@@ -24,6 +24,9 @@ export function GiftCardPicker() {
       on ? "bg-red/15 text-white ring-red shadow-[inset_0_0_0_1px_rgb(227_25_31)]" : "bg-white/[0.03] text-chrome ring-white/12 hover:bg-white/[0.07] hover:text-white",
     );
   const ghost = "inline-flex min-h-12 items-center gap-2 rounded-full bg-white/5 px-6 py-3 font-extrabold text-white ring-1 ring-white/15 hover:bg-white/10";
+  const primary = "inline-flex min-h-12 items-center gap-2 rounded-full bg-red px-6 py-3 font-extrabold text-white hover:bg-[#f0262c]";
+  // The first online option Mike has set up is the main (red) button; "Text Mike" is red only when there's none.
+  const main = giftCards.squareUrl ? "square" : paypal ? "paypal" : venmo ? "venmo" : "text";
 
   return (
     <div className="rounded-[2rem] bg-carbon p-6 ring-1 ring-white/10 sm:p-9">
@@ -54,21 +57,25 @@ export function GiftCardPicker() {
             Buy online <ArrowIcon size={18} />
           </a>
         )}
+        {paypal && (
+          <a href={paypal} target="_blank" rel="noopener noreferrer" onClick={() => track("paypal")} className={main === "paypal" ? primary : ghost}>
+            Pay ${amount} with PayPal <ArrowIcon size={18} />
+          </a>
+        )}
         {venmo && (
-          <a href={venmo} target="_blank" rel="noopener noreferrer" onClick={() => track("venmo")} className={ghost}>
+          <a href={venmo} target="_blank" rel="noopener noreferrer" onClick={() => track("venmo")} className={main === "venmo" ? primary : ghost}>
             Pay ${amount} with Venmo
           </a>
         )}
-        {paypal && (
-          <a href={paypal} target="_blank" rel="noopener noreferrer" onClick={() => track("paypal")} className={ghost}>
-            Pay ${amount} with PayPal
-          </a>
-        )}
-        <a href={sms} onClick={() => track("text")} className={giftCards.squareUrl || venmo || paypal ? ghost : "inline-flex min-h-12 items-center gap-2 rounded-full bg-red px-6 py-3 font-extrabold text-white hover:bg-[#f0262c]"}>
+        <a href={sms} onClick={() => track("text")} className={main === "text" ? primary : ghost}>
           <ChatIcon size={18} /> Text Mike to order
         </a>
       </div>
-      {(venmo || paypal) && <p className="mt-4 text-sm text-muted">Paying with Venmo or PayPal? Text Mike afterwards so he knows where to send the certificate.</p>}
+      {(venmo || paypal) && (
+        <p className="mt-4 text-sm text-muted">
+          After you pay with {paypal && venmo ? "PayPal or Venmo" : paypal ? "PayPal" : "Venmo"}, text Mike who it&apos;s for so he knows where to send the certificate.
+        </p>
+      )}
     </div>
   );
 }
