@@ -3,6 +3,7 @@ import { promos } from "@/content/site";
 import { serverNow } from "@/lib/now";
 import { activeItems } from "@/lib/time";
 import { ArrowIcon } from "../icons";
+import { VideoClip } from "../VideoClip";
 import { Container, Stripes } from "../ui";
 import { DateGate } from "./DateGate";
 
@@ -18,8 +19,12 @@ export async function Specials() {
       <Container className="relative grid gap-8">
         {active.map((p) => (
           <DateGate key={p.id} windows={[{ startsAt: p.startsAt, endsAt: p.endsAt }]}>
-            <article className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-graphite to-carbon p-6 ring-1 ring-red/30 sm:p-10" data-promo={p.id}>
-              <Stripes className="absolute top-8 right-8 hidden w-32 opacity-40 sm:flex" />
+            <article
+              className={`relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-graphite to-carbon p-6 ring-1 ring-red/30 sm:p-10 ${p.video ? "grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,18rem)] lg:gap-12" : ""}`}
+              data-promo={p.id}
+            >
+              <Stripes className={`absolute top-8 right-8 hidden w-32 opacity-40 sm:flex ${p.video ? "md:hidden" : ""}`} />
+              <div className="min-w-0">
               <p className="eyebrow text-red-text">{p.kicker}</p>
               <h2 className="mt-3 text-[clamp(1.9rem,4.5vw,3.4rem)] leading-none font-black uppercase">
                 <span className="chrome">{p.title}</span>
@@ -60,6 +65,8 @@ export async function Specials() {
                 <summary className="cursor-pointer font-bold text-chrome hover:text-white">Terms &amp; conditions</summary>
                 <p className="mt-2 max-w-4xl">{p.terms}</p>
               </details>
+              </div>
+              {p.video && <VideoClip slug={p.video} className="mx-auto w-full max-w-[18rem]" />}
             </article>
           </DateGate>
         ))}

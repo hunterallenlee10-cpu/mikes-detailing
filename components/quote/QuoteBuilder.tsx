@@ -4,6 +4,7 @@ import { AnimatePresence, LazyMotion, domAnimation, m } from "framer-motion";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { business, links, quoteServiceOptions } from "@/content/site";
 import { cn } from "@/lib/cn";
+import { readRef } from "@/lib/referral";
 import { ArrowIcon, CalendarIcon, ChatIcon, CheckIcon, CloseIcon, MailIcon, PhoneIcon, UploadIcon } from "../icons";
 
 const VEHICLES = ["Car", "SUV", "Truck", "Van", "Exotic / Classic"] as const;
@@ -45,12 +46,16 @@ export function QuoteBuilder({ initialServices = [] }: { initialServices?: strin
   const [photos, setPhotos] = useState<{ file: File; url: string }[]>([]);
   const [contact, setContact] = useState<string>("Text");
   const [person, setPerson] = useState({ name: "", phone: "", email: "", date: "" });
+  const [referredBy, setReferredBy] = useState("");
   const [hp, setHp] = useState("");
   const [error, setError] = useState("");
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const startedAt = useRef(0);
   useEffect(() => {
     startedAt.current = Date.now();
+    const ref = readRef();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (ref) setReferredBy(ref);
   }, []);
   const headingRef = useRef<HTMLHeadingElement>(null);
 
@@ -65,10 +70,11 @@ export function QuoteBuilder({ initialServices = [] }: { initialServices?: strin
       person.phone && `Phone: ${person.phone}`,
       person.email && `Email: ${person.email}`,
       person.date && `Preferred date: ${person.date}`,
+      referredBy && `Referred by: ${referredBy}`,
     ]
       .filter(Boolean)
       .join("\n");
-  }, [vehicleType, ymm, svc, notes, contact, person]);
+  }, [vehicleType, ymm, svc, notes, contact, person, referredBy]);
 
   const smsHref = `sms:${business.phone.e164}?&body=${encodeURIComponent(`Hey Mike! ${summary}`)}`;
 
@@ -125,6 +131,7 @@ export function QuoteBuilder({ initialServices = [] }: { initialServices?: strin
     fd.set("phone", person.phone);
     fd.set("email", person.email);
     fd.set("date", person.date);
+    fd.set("referredBy", referredBy);
     fd.set("company", hp); // honeypot
     fd.set("elapsed", String(Date.now() - startedAt.current));
     photos.forEach((p) => fd.append("photos", p.file));
@@ -166,6 +173,15 @@ export function QuoteBuilder({ initialServices = [] }: { initialServices?: strin
               <PhoneIcon size={18} /> Call {business.phone.display}
             </a>
           </div>
+          {sent && (
+            <p className="mt-6 text-sm text-muted">
+              Know someone who&apos;d want this?{" "}
+              <a href="/refer" className="font-bold text-white underline hover:text-red-text">
+                Refer a friend
+              </a>
+              .
+            </p>
+          )}
           {!sent && (
             <p className="mt-6 text-sm text-muted">
               Or email{" "}
@@ -358,6 +374,10 @@ export function QuoteBuilder({ initialServices = [] }: { initialServices?: strin
                       <input className={cn(input, "[color-scheme:dark]")} type="date" value={person.date} onChange={(e) => setPerson({ ...person, date: e.target.value })} />
                     </label>
                   </div>
+                  <label className="text-sm font-bold text-muted">
+                    Referred by a friend? <span className="font-normal">(optional — so Mike can thank them)</span>
+                    <input className={input} autoComplete="off" maxLength={60} placeholder="Their name" value={referredBy} onChange={(e) => setReferredBy(e.target.value)} />
+                  </label>
                   <p className="text-xs text-muted">
                     We only use this to reply to your quote. See our <a href="/privacy" className="underline hover:text-white">privacy policy</a>.
                   </p>

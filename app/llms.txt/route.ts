@@ -35,6 +35,8 @@ ${faqs.map((f) => `### ${f.q}\n${f.a}`).join("\n\n")}
 - [Reviews](${base}/reviews)
 - [About](${base}/about)
 - [Contact & quote](${base}/contact)
+- [Gift cards](${base}/gift-cards)
+- [Refer a friend](${base}/refer)
 `;
   return new Response(body, { headers: { "content-type": "text/plain; charset=utf-8" } });
 }

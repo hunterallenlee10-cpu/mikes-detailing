@@ -9,6 +9,7 @@ import { PromoPill } from "@/components/layout/PromoPill";
 import { Footer } from "@/components/layout/Footer";
 import { MobileActionBar } from "@/components/layout/MobileActionBar";
 import { Effects } from "@/components/layout/Effects";
+import { ReferralCapture } from "@/components/referral/ReferralCapture";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -75,6 +76,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main id="main">{children}</main>
         <Footer />
         <MobileActionBar />
+        <ReferralCapture />
         <Effects />
         {/* Vercel Web Analytics only exists on Vercel deployments */}
         {process.env.VERCEL && <Analytics />}

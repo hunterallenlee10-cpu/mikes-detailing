@@ -108,16 +108,6 @@ export const TikTokIcon = ({ size = 20, ...p }: P) => (
 );
 
 /* Service glyphs */
-export const PlayIcon = (p: P) => (
-  <svg {...base(p)}>
-    <path d="M7 4.5v15l12-7.5z" fill="currentColor" />
-  </svg>
-);
-export const PauseIcon = (p: P) => (
-  <svg {...base(p)}>
-    <path d="M8 5v14M16 5v14" strokeWidth={3} />
-  </svg>
-);
 export const ServiceIcon = ({ name, ...p }: P & { name: string }) => {
   switch (name) {
     case "spray":

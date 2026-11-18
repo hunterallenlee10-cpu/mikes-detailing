@@ -24,6 +24,10 @@ Open **`content/site.ts`** on GitHub, click the pencil, change the text, and com
 | Prices | `prices` (full detail, ceramic "from" price, tint removal) |
 | Specials / promos | `promos` — each has `startsAt` / `endsAt`. They show automatically inside those dates and hide themselves after. |
 | Google / Facebook rating numbers | `ratings` |
+| Review links (incl. "Leave a review" button) | `links.googleReviews`, `links.facebookReviews`, `links.googleWriteReview` |
+| Videos (captions, which page shows which clip) | `videos`, `galleryVideos`, a promo's `video`, a service's `proof.video` |
+| Refer-a-friend rewards | `referral` |
+| Gift cards (Square / Venmo / PayPal links, amounts) | `giftCards` |
 | Reviews | `reviews` — real quotes only; trim with "…", never change words |
 | Gallery captions | `gallery` |
 | FAQ | `faqs` (home) and each service's `faqs` |
@@ -79,7 +83,7 @@ How each Drive photo is used:
 | 06 | Z06 frunk/engine bay | Lighting hero, gallery |
 | 07 | LowGlow flyer | Reference only — rebuilt natively as the Lighting section. Its thumbnails were AI-style renders with baked-in labels, so they were not used. |
 
-**LowGlow example media (Lighting page → "See it lit").** Until Mike has his own ambient-lighting and starlight-headliner photos, the Lighting page shows 6 photos + 2 short silent clips from LowGlow's public product pages (lowglow.shop), credited on the page. They are deliberately **not** in the Gallery, which is only Mike's own work. The list of source URLs, crops and video trim points is `LOWGLOW_PHOTOS` / `LOWGLOW_VIDEOS` in `scripts/process-images.mjs`; the page text is `lightingExamples` in `content/site.ts` (set `show: false` to hide the section). Rebuild just that media (needs `ffmpeg`) with:
+**LowGlow example media (Lighting page → "See it lit").** Until Mike has his own ambient-lighting and starlight-headliner photos, the Lighting page shows 6 photos + 2 short silent clips from LowGlow's public product pages (lowglow.shop), credited on the page. They are deliberately **not** in the Gallery, which is only Mike's own work. The list of source URLs, crops and video trim points is `LOWGLOW_PHOTOS` / `LOWGLOW_VIDEOS` in `scripts/process-images.mjs`. The clips land in `public/videos/` and are listed in `videos` in `content/site.ts` (but not in `galleryVideos`); the page text is `lightingExamples` in the same file (set `show: false` to hide the section). Rebuild just that media (needs `ffmpeg`) with:
 
 ```bash
 npm run images:lowglow
@@ -91,6 +95,30 @@ npm run images:lowglow
 | 12 | Tacoma | Small gallery tile, Tint page (plate + watermark cropped out) |
 | 13 | Shop hex lights | Home hero card, Visit the Shop, Audio page, gallery (straightened 11°) |
 | 14 | Grand opening flyer | Reference only — rebuilt as the native Specials component |
+| 15 | T.N. Bowes HVAC van (Nov 2026) | Fleet hero, gallery (plate blurred) |
+| 16 | C8 underglow in the bay (Nov 2026) | Lighting hero + home Lighting card, gallery (replaces the drawn underglow illustration) |
+| 17, 18, 21 | Red C6 Corvette (Nov 2026) | Gallery: front in the bay (plate blurred), flag reflection, interior. 19 (second front shot) and 20 (open hatch) not used. |
+| 22, 23 | '71 Chevelle SS, ceramic coating (Nov 2026) | Gallery: front and rear (vanity plate blurred) |
+
+The script keeps any photo whose original isn't on your machine exactly as it is, so you can add new photos without having every old original.
+
+### Videos
+
+Clips live in `public/videos/<slug>.mp4` (H.264, 720px wide, `+faststart`) with a poster frame at `public/videos/<slug>.webp`, and are listed in `videos` in `content/site.ts`. Silent clips loop muted while on screen; clips with sound show "Tap for sound". Crop out plates before publishing (the beading clip is cropped above the plate). Example encode:
+
+```bash
+ffmpeg -i IN.MOV -ss 0 -t 9 -vf "scale=720:-2,format=yuv420p" -c:v libx264 -crf 25 -preset slow -c:a aac -b:a 112k -movflags +faststart -map_metadata -1 public/videos/NAME.mp4
+```
+
+| Clip | Source | Where |
+|---|---|---|
+| `tnb-tint-a1` | IMG_8973, first 8.9 s ("My man Mike — A1… check out them tints, baby — woo!") | Fleet + Window Tint proof sections, gallery |
+| `water-beading-sealant` | IMG_9087, silent, cropped above the plate | Fall Exterior Special card, gallery |
+
+### Refer a friend & gift cards
+
+- **`/refer`** — a customer types their name and gets a personal link (`/?ref=Name`) to text or share. When a friend opens it, the site remembers the name on their phone (90 days), shows a small "Name sent you" note, and pre-fills "Referred by" in the quote form, so the quote email/text says who sent them. No accounts or database needed.
+- **`/gift-cards`** — pick an amount → pay online or "Text Mike to order". Buttons appear for whatever is filled in `giftCards`: a **Square eGift Card** link (recommended: free to set up, 2.5% load fee + card processing; the card is emailed/texted to the recipient and can be added to Apple Wallet), a **Venmo Business** username, or a **PayPal.me** username. With none filled in, the page still works through "Text Mike to order".
 
 ### Shop map
 
@@ -104,7 +132,7 @@ npm run map
 
 - **Home:** hex-light power-on hero → certifications → live specials → 6 service cards → ceramic protection ladder with the water-beading demo → pinned 6-step process → recent work → reviews → Meet Mike → quote builder → Visit the Shop (live Open now/Closed in Eastern time, custom night map) → FAQ → "Because Detail Matters" CTA.
 - **Service pages:** `/auto-detailing`, `/ceramic-coating`, `/paint-correction`, `/lighting`, `/car-audio`, `/window-tint`, `/fleet` — each with hero, signature feature, what's included, who it's for, pricing, proof + matching reviews, FAQ (with FAQ schema), and a quote form pre-selected for that service.
-- `/gallery` (filter + lightbox), `/reviews`, `/about`, `/contact`, `/privacy`, and a 404 where the hex lights flicker out.
+- `/gallery` (filter + lightbox + "On video" clips), `/reviews`, `/about`, `/contact`, `/refer` (refer a friend), `/gift-cards`, `/privacy`, and a 404 where the hex lights flicker out.
 - **SEO:** `AutomotiveBusiness` JSON-LD on every page (address, geo, hours, area served, socials, credentials, offer catalog), `FAQPage` and `BreadcrumbList` schema, per-page titles/descriptions/canonicals, `sitemap.xml`, `robots.txt`, `llms.txt`, Open Graph image, favicons. `aggregateRating` is only output once the Google review count is filled in `ratings.google.reviewCount`.
 - **Quote form:** 4 animated steps, up to 5 photos (compressed in the browser), honeypot + timing check + rate limit, emails via Resend, SMS fallback.
 
@@ -134,20 +162,22 @@ Also verified: zero TypeScript/ESLint errors, no console errors, no horizontal o
 
 ## [CONFIRM] list for Mike
 
-Everything below is already wired up — just update `content/site.ts` once Mike confirms.
+Updated Nov 11, 2026 after checking his Instagram, TikTok and Google listing (Facebook is login-walled). Everything is wired up — just update `content/site.ts` once Mike answers.
 
-1. **Booking URL** — exact Koalendar link behind the Facebook "Book now" button → `BOOKING_URL`.
-2. **Ceramic starting price** — site says IGL packages start at **$1,500** (an older post said $800) → `prices.ceramicFrom`.
-3. **Promo dates** — Grand Opening assumed to run **Oct 24 → Nov 21, 2026** (4 weeks); Fall Exterior Special $100 assumed to run through **Nov 30, 2026**. Is the Fall special still running? → `promos[].startsAt / endsAt`.
-4. **Travel / mobile service** — still offered now that the shop is open? → `business.offersMobileService`.
-5. **LowGlow dealer link or code** → `business.lowglowUrl` / `business.lowglowCode`.
-6. **IGL warranty terms** — not stated anywhere on the site yet (we don't publish warranties without confirmation).
-7. **Audio and tint brands** he carries — not listed yet.
-8. **Google review count + exact review link** (`g.page/r/…`) → `ratings.google.reviewCount`, `links.googleReviews`. Unlocks star-rating schema.
-9. **Domain** — set `NEXT_PUBLIC_SITE_URL` (and `business.siteUrl`) to the real domain.
-10. **Shop photo car** — photo 13 is captioned without naming the car model; confirm what it is if he wants it named.
-11. **Underglow photo** — the C8 Z06 underglow gallery tile uses a drawn illustration (clearly labelled) until Mike sends a real photo of the install.
-12. **Official IGL / LowGlow dealer badges** — site uses tasteful text badges; swap in official assets if he has them.
+**Answered by Mike (Nov 11, 2026):** referral reward 10% off for both people · red C6 got a full interior & exterior detail · gift card payments via PayPal.me/MikesAutoCareService · hours Mon–Fri 8–8 with an 11–2 midday break, Sat 9–3 · Fall Special ends Nov 30 · Grand Opening ends Nov 21 · mobile service yes, with a travel fee, shop-only in the cold season.
+
+**Still need Mike:**
+
+1. **Gift cards** — PayPal is set up (`paypal.me/MikesAutoCareService`); just confirm the terms line in `giftCards.terms`.
+2. **More photos/videos** — short clips of Mike working (originals straight from his phone, not screenshots).
+
+**Optional (site is fine without):** is the C8 underglow car (also the car in the hex-light shop photo) the 2025 Z06? · tint film brand · IGL warranty terms beyond "4-year" · LowGlow discount code (he isn't in LowGlow's public installer locator yet) · official IGL/LowGlow badge images.
+
+**Mike's Google Business Profile to-dos:** category "Car wash" → "Car detailing service"; website → `https://www.mikesautomotivedetailingmd.com`; show the shop address; hours → Mon–Fri 8–11 AM and 2–8 PM, Sat 9–3, Sun closed (Google allows two time ranges per day).
+
+**Resolved:** booking link (none — his posts say DM or call/text, so "Book Online" opens the quote form) · ceramic "from" price ($1,500, per the Oct 24 flyer) · Google review links + count · domain (`www.mikesautomotivedetailingmd.com`) · audio brands incl. JL Audio · underglow photo.
+
+**Hosting note:** Vercel's production branch is still `claude/affectionate-einstein-ivbncj`, so merging to `main` only makes a preview. Change it in Vercel → Project → Settings → Environments → Production → Branch Tracking to `main` (until then, promote the latest `main` deployment to production).
 
 ---
 

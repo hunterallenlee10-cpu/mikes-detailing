@@ -9,10 +9,11 @@
  *  See README.md → "[CONFIRM] list for Mike".
  */
 
-import type { PhotoSlug, VideoSlug } from "./images.generated";
+import type { PhotoSlug } from "./images.generated";
 
-/** Online booking page (his Facebook "Book now" → Koalendar). Leave "" and every "Book Online" button opens the quote form instead. */
-export const BOOKING_URL = ""; // [CONFIRM] exact Koalendar URL
+/** Online booking page, if Mike ever uses one. Leave "" and every "Book Online" button opens the quote form instead.
+ *  (As of Nov 2026 his posts say "DM or Call/Text (301) 752-8505 to get scheduled" — no public booking link.) */
+export const BOOKING_URL = "";
 
 /* ───────────────────────────── Business basics ───────────────────────────── */
 
@@ -24,7 +25,7 @@ export const business = {
   tagline: "Because Detail Matters",
   established: 2020,
   positioning: "One Stop Automotive Detailing & Accessory Shop",
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://mikes-detailing-xi.vercel.app", // [CONFIRM] switch to the real domain when it is live
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://www.mikesautomotivedetailingmd.com",
   phone: {
     display: "(301) 752-8505",
     e164: "+13017528505",
@@ -43,8 +44,9 @@ export const business = {
   timezone: "America/New_York",
   bookingUrl: BOOKING_URL,
   areaServed: ["Leonardtown", "St. Mary's County", "Calvert County", "Charles County", "Southern Maryland"],
-  /** Mobile / on-site service now that the shop is open? Controls the "We will travel" copy + FAQ answer. */
-  offersMobileService: null as boolean | null, // [CONFIRM] true = yes, false = shop only, null = "ask Mike"
+  /** Mobile / on-site service now that the shop is open? Controls the "Do you travel?" FAQ answer.
+   *  Mike (Nov 2026): both — mobile has a travel fee, and it's shop-only during the cold season. */
+  offersMobileService: true as boolean | null,
   socials: {
     instagram: "https://www.instagram.com/mikesautomotivedetailing/",
     facebook: "https://www.facebook.com/Mikes.Auto.Detailing.Services",
@@ -66,6 +68,8 @@ export const business = {
 
 export const SMS_PREFILL = "Hey Mike! I found you on your website and I'd like a quote. My vehicle is a ";
 
+const GOOGLE_PROFILE_SEARCH = "https://www.google.com/search?q=Mikes+Automotive+Detailing+Leonardtown+MD";
+
 export const links = {
   tel: `tel:${business.phone.e164}`,
   sms: `sms:${business.phone.e164}?&body=${encodeURIComponent(SMS_PREFILL)}`,
@@ -73,41 +77,42 @@ export const links = {
   directions: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
     "Mike's Automotive Detailing, 26005 Point Lookout Rd, Leonardtown, MD 20650",
   )}`,
-  mapsListing: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    "Mike's Automotive Detailing 26005 Point Lookout Rd Leonardtown MD 20650",
-  )}`,
-  googleReviews: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    "Mike's Automotive Detailing Leonardtown MD reviews",
-  )}`, // [CONFIRM] swap for his exact Google review link (g.page/r/…)
+  /** His Google Business Profile (place ID 0xa03e8ce35b1c1b2b:0x7c84c48ae1534f5, CID 560782028649608437). */
+  mapsListing: "https://www.google.com/maps?cid=560782028649608437",
+  /** Opens his Google reviews panel (",1" = read reviews). */
+  googleReviews: `${GOOGLE_PROFILE_SEARCH}#lrd=0xa03e8ce35b1c1b2b:0x7c84c48ae1534f5,1,,,,`,
   facebookReviews: "https://www.facebook.com/Mikes.Auto.Detailing.Services/reviews",
+  /** Google "write a review" link (Google Business Profile → Ask for reviews → copy link, looks like g.page/r/…/review). Leave "" to hide the button. */
+  googleWriteReview: `${GOOGLE_PROFILE_SEARCH}#lrd=0xa03e8ce35b1c1b2b:0x7c84c48ae1534f5,3,,,,`, // ",3" = opens "Write a review"
 };
 
 /* ──────────────────────────────── Hours ──────────────────────────────────── */
 // day: 0 = Sunday … 6 = Saturday. 24-hour times, Eastern time.
+// A day can have more than one entry — weekdays have a midday break (lunch + gym) from 11 to 2.
 export const hours: { day: number; open: string; close: string }[] = [
-  { day: 1, open: "07:00", close: "18:00" },
-  { day: 2, open: "07:00", close: "18:00" },
-  { day: 3, open: "07:00", close: "18:00" },
-  { day: 4, open: "07:00", close: "18:00" },
-  { day: 5, open: "07:00", close: "18:00" },
+  ...[1, 2, 3, 4, 5].flatMap((day) => [
+    { day, open: "08:00", close: "11:00" },
+    { day, open: "14:00", close: "20:00" },
+  ]),
   { day: 6, open: "09:00", close: "15:00" },
 ];
 export const hoursDisplay = [
-  { label: "Mon – Fri", value: "7:00 AM – 6:00 PM" },
+  { label: "Mon – Fri", value: "8:00 AM – 8:00 PM" },
+  { label: "Midday break", value: "11:00 AM – 2:00 PM" }, // Mon – Fri (shown right under the Mon – Fri row)
   { label: "Saturday", value: "9:00 AM – 3:00 PM" },
   { label: "Sunday", value: "Closed" },
 ];
 
 /* ─────────────────────────── Ratings (update as they change) ─────────────── */
 export const ratings = {
-  google: { rating: 5.0, reviewCount: null as number | null }, // [CONFIRM] Google review count → enables star rating in search schema
+  google: { rating: 5.0, reviewCount: 8 as number | null }, // as of Nov 11, 2026 — update as reviews come in (enables star rating in search schema)
   facebook: { recommendPercent: 100, reviewCount: 18 },
 };
 
 /* ──────────────────────────────── Prices ─────────────────────────────────── */
 export const prices = {
   fullDetail: 350, // Full Interior & Exterior Detail (regular, no polishing)
-  ceramicFrom: 1500, // [CONFIRM] IGL ceramic packages "starting at" (an older post said $800)
+  ceramicFrom: 1500, // IGL ceramic packages "starting at" (Grand Opening flyer, Oct 24, 2026)
   tintRemovalPerWindow: 20,
 };
 
@@ -122,6 +127,8 @@ export type Promo = {
   banner: string; // one-liner for the top banner
   items: { name: string; price: string; was?: string; note: string; href: string }[];
   terms: string;
+  /** Optional clip shown next to the offer (see `videos` below). */
+  video?: VideoSlug;
 };
 
 export const promos: Promo[] = [
@@ -129,8 +136,8 @@ export const promos: Promo[] = [
     id: "grand-opening-2026",
     title: "Grand Opening Specials",
     kicker: "New Leonardtown shop · 4 weeks only",
-    startsAt: "2026-10-24T00:00:00-04:00", // [CONFIRM] official grand-opening date
-    endsAt: "2026-11-21T23:59:59-05:00", // [CONFIRM] 4 weeks after grand opening
+    startsAt: "2026-10-24T00:00:00-04:00", // announced Oct 24, 2026; doors opened Mon Oct 26
+    endsAt: "2026-11-21T23:59:59-05:00", // confirmed by Mike (Nov 2026)
     banner: "Grand Opening Specials — Full Detail $279 · IGL Ceramic from $1,299",
     items: [
       { name: "Full Interior & Exterior Detail", price: "$279", was: "$350", note: "First 20 bookings. No polishing included.", href: "/auto-detailing" },
@@ -145,8 +152,8 @@ export const promos: Promo[] = [
     id: "fall-exterior-2026",
     title: "Fall Exterior Special",
     kicker: "Beat the winter road salt",
-    startsAt: "2026-09-22T00:00:00-04:00",
-    endsAt: "2026-11-30T23:59:59-05:00", // [CONFIRM] still running? end date?
+    startsAt: "2026-11-07T00:00:00-05:00", // first posted Nov 7, 2026
+    endsAt: "2026-11-30T23:59:59-05:00", // confirmed by Mike (Nov 2026)
     banner: "Fall Exterior Special — $100 wash + 3-month sealant + tire coating",
     items: [
       {
@@ -157,6 +164,7 @@ export const promos: Promo[] = [
       },
     ],
     terms: "New bookings only. Final price depends on vehicle size and condition. Can't be combined with other offers.",
+    video: "water-beading-sealant",
   },
 ];
 
@@ -184,7 +192,7 @@ export type Service = {
   intro: string;
   included: { title: string; body: string }[];
   forWho: string[];
-  proof: { headline: string; body: string; reviewIds: string[] };
+  proof: { headline: string; body: string; reviewIds: string[]; video?: VideoSlug };
   pricing: { label: string; value: string; note?: string }[];
   faqs: { q: string; a: string }[];
   feature?: "water" | "process" | "lights" | "audio";
@@ -233,7 +241,7 @@ export const services: Service[] = [
       { label: "Exterior or interior only", value: "Quote", note: "Based on vehicle size and condition." },
     ],
     faqs: [
-      { q: "Can I drop my car off before work?", a: "Yes. Plenty of customers drop off in the morning and pick up after work — the shop opens at 7:00 AM on weekdays." },
+      { q: "Can I drop my car off before work?", a: "Yes. Plenty of customers drop off in the morning and pick up after work — the shop opens at 8:00 AM on weekdays and is open until 8:00 PM." },
       { q: "Does the full detail include polishing?", a: "No. The full interior & exterior detail is a deep clean inside and out. Removing swirls and scratches is paint correction, which we quote separately." },
       { q: "Can you get pet hair out?", a: "Yes — pet hair removal is part of our interior detail." },
       { q: "Do you detail engine bays?", a: "Yes. Engine bay and frunk/trunk area details are available on their own or added to any detail." },
@@ -340,8 +348,8 @@ export const services: Service[] = [
     short: "Lighting",
     card: "LowGlow Certified Dealer & Installer. Underglow, rock lights, starlight headliners, ambient kits — no exposed wiring.",
     accent: "neon",
-    photo: "shop-hex-ceiling",
-    photoAlt: "Hexagon LED light ceiling glowing over the bay at the Leonardtown shop",
+    photo: "c8-underglow-bay",
+    photoAlt: "Black C8 Corvette with doors up and red underglow lit, under the hexagon LED ceiling at the Leonardtown shop",
     seo: {
       title: "Underglow, Starlight Headliners & Ambient Lighting in Leonardtown, MD | LowGlow Certified | Mike's",
       description:
@@ -404,6 +412,7 @@ export const services: Service[] = [
       { title: "Speaker installs", body: "Clarity you can actually hear at highway speed." },
       { title: "Clean wiring", body: "Top-notch, hidden, done right — same standard as our lighting." },
       { title: "In-shop listening demo", body: "Bring your playlist. Hear it before you buy." },
+      { title: "Name brands", body: "Skar Audio, Focal, Memphis, Sundown, JL Audio, AudioControl, Rockford Fosgate and more." },
     ],
     forWho: ["Factory systems that sound flat", "Bass heads", "Anyone who wants it clean and reliable", "Budget builds — we'll make it hit"],
     proof: {
@@ -415,6 +424,7 @@ export const services: Service[] = [
     faqs: [
       { q: "Can I hear the audio before I buy?", a: "Yes! Come in and play whatever song you'd like." },
       { q: "Do you do budget builds?", a: "Yes — from budget builds to custom-made audio equipment." },
+      { q: "What audio brands do you install?", a: "Skar Audio, Focal, Memphis Car Audio, Sundown Audio, JL Audio, AudioControl, Rockford Fosgate and more. Ask about anything you have your eye on." },
     ],
     feature: "audio",
   },
@@ -443,8 +453,9 @@ export const services: Service[] = [
     forWho: ["Got a ticket for your tint", "Old purple, bubbling film", "Trucks other shops passed on", "Fresh new rides"],
     proof: {
       headline: "“Guess Mike didn't get the memo.”",
-      body: "A truck that's notoriously difficult to tint — not a single blemish or bubble.",
+      body: "A truck that's notoriously difficult to tint — not a single blemish or bubble. And when the T.N. Bowes Heating & Air crew picked up their van? Hit play.",
       reviewIds: ["fb-tint"],
+      video: "tnb-tint-a1",
     },
     pricing: [
       { label: "Tint removal", value: `from $${prices.tintRemovalPerWindow}/window` },
@@ -459,14 +470,14 @@ export const services: Service[] = [
     slug: "fleet",
     name: "Fleet & Work Truck Detailing",
     short: "Fleet",
-    card: "Work trucks and fleets kept spotless — a local fleet has trusted us since 2022.",
+    card: "Work trucks, vans and fleets kept spotless — a local fleet has trusted us since 2022.",
     accent: "red",
-    photo: "gmc-at4x-igl",
-    photoAlt: "Red heavy-duty GMC pickup truck, freshly detailed and coated",
+    photo: "tnb-van-fleet",
+    photoAlt: "T.N. Bowes Heating & Air Conditioning service van in the hex-lit bay at Mike's shop",
     seo: {
       title: "Fleet & Work Truck Detailing in Southern Maryland | Mike's Automotive Detailing",
       description:
-        "Fleet and work truck detailing for Southern Maryland businesses. Keep every vehicle looking professional. Trusted by a local fleet since 2022.",
+        "Fleet, work truck and work van detailing and window tint for Southern Maryland businesses. Keep every vehicle looking professional. Trusted by a local fleet since 2022.",
       h1: "Fleet & Work Truck Detailing in Southern Maryland",
     },
     eyebrow: "For businesses",
@@ -475,13 +486,15 @@ export const services: Service[] = [
     included: [
       { title: "Interior & exterior", body: "Work-truck interiors that actually come clean." },
       { title: "Protection", body: "Sealants or ceramic to make the next wash faster." },
+      { title: "Window tint", body: "Clean, bubble-free tint for work vans and trucks — like the T.N. Bowes Heating & Air van." },
       { title: "Scheduling", body: "Drop-off windows that keep your crews moving." },
     ],
-    forWho: ["Contractors", "Service companies", "Dealerships", "Anyone running more than one vehicle"],
+    forWho: ["Contractors & HVAC companies", "Service vans", "Dealerships", "Anyone running more than one vehicle"],
     proof: {
       headline: "Spotless since 2022.",
-      body: "A commercial customer has trusted Mike with their truck fleet since 2022.",
+      body: "A commercial customer has trusted Mike with their truck fleet since 2022. And here's the T.N. Bowes Heating & Air crew picking up their service van.",
       reviewIds: ["kirk-b"],
+      video: "tnb-tint-a1",
     },
     pricing: [{ label: "Fleet programs", value: "Quote", note: "Based on fleet size and schedule." }],
     faqs: [{ q: "Do you detail fleets and work trucks?", a: "Yes. We've kept a local fleet spotless since 2022. Call or text to set up a schedule." }],
@@ -571,8 +584,22 @@ export const reviews: Review[] = [
       "…His attention to detail is unmatched, and you can tell he puts his heart into what he does. He doesn't just rush through a job to get it done; he takes his time and makes sure everything is done right. My car looks absolutely amazing…",
     tags: ["auto-detailing"],
   },
-  { id: "carah-p", name: "Carah P.", source: "Google", quote: "Had Michael detail my car and I swear it looks better than when I bought it! My kids take a toll on my car and he was able to make it look so good!…", tags: ["auto-detailing"] },
-  { id: "jacob-w", name: "Jacob W.", source: "Facebook", quote: "Took my RAV4 to Mike for an exterior detail and it looks great. I dropped it off before work and picked it up after…", tags: ["auto-detailing"] },
+  { id: "carah-p", name: "Carah P.", source: "Google", quote: "Had Michael detail my car and I swear it looks better than when I bought it! My kids take a toll on my car and he was able to make it look so good! So happy with how it turned out and will always call Michael from now on!!", tags: ["auto-detailing"] },
+  {
+    id: "jacob-w",
+    name: "Jacob W.",
+    source: "Google & Facebook",
+    quote:
+      "Took my RAV4 to Mike for an exterior detail and it looks great! I dropped it off before work and picked it up after, so it didn't take anything out of my day. He was easy to work with, and you can tell he takes his time…",
+    tags: ["auto-detailing"],
+  },
+  {
+    id: "peachy-g",
+    name: "Peachy G.",
+    source: "Google",
+    quote: "Mike is awesome! He is professional, flexible, punctual, and detail-oriented. I appreciate how openly he communicated about the issues I was experiencing, answered all my questions…",
+    tags: [],
+  },
   {
     id: "fb-tint",
     name: "Facebook review",
@@ -585,8 +612,8 @@ export const reviews: Review[] = [
 export const reviewById = (id: string) => reviews.find((r) => r.id === id);
 
 /* ──────────────────────────────── Gallery ────────────────────────────────── */
-export type GalleryCategory = "Detailing" | "Ceramic" | "Lighting" | "Audio";
-export const galleryCategories: GalleryCategory[] = ["Detailing", "Ceramic", "Lighting", "Audio"];
+export type GalleryCategory = "Detailing" | "Ceramic" | "Lighting" | "Audio" | "Fleet";
+export const galleryCategories: GalleryCategory[] = ["Detailing", "Ceramic", "Lighting", "Audio", "Fleet"];
 export type GalleryItem = {
   /** A real photo… */
   photo?: PhotoSlug;
@@ -598,18 +625,108 @@ export type GalleryItem = {
   categories: GalleryCategory[];
 };
 export const gallery: GalleryItem[] = [
+  { photo: "c8-underglow-bay", title: "C8 Corvette — underglow install", caption: "Red underglow wired clean, lit up under the hex lights in the new bay.", alt: "Black C8 Corvette with doors up and red underglow glowing on the shop floor under hexagon LED lights", categories: ["Lighting"] },
+  { photo: "chevelle-71-front", title: "'71 Chevelle SS", caption: "Ceramic coating — deep gloss on the burgundy paint and chrome.", alt: "Burgundy 1971 Chevrolet Chevelle SS on chrome wheels after a ceramic coating, under the hex lights with an American flag on the wall", categories: ["Ceramic"] },
+  { photo: "c6-corvette-bay", title: "Red C6 Corvette", caption: "Full interior & exterior detail.", alt: "Red C6 Chevrolet Corvette with chrome wheels after a full interior and exterior detail, in the hex-lit bay at dusk", categories: ["Detailing"] },
   { photo: "gmc-at4x-igl", title: "2026 GMC 2500HD AT4X", caption: "Wash, mechanical + chemical decon, polish, 4-year IGL ceramic coating.", alt: "Red 2026 GMC Sierra 2500HD AT4X after polish and 4-year IGL ceramic coating", categories: ["Ceramic", "Detailing"] },
   { photo: "monte-carlo-gloss", title: "Procharged 434ci '86 Monte Carlo SS", caption: "Light polish + IGL Professional Arcane 4-year ceramic coating.", alt: "Mirror-like reflections in the black paint of an '86 Monte Carlo SS after IGL coating", categories: ["Ceramic"] },
   { photo: "z06-frunk-engine-bay", title: "2025 C8 Z06", caption: "Wash, frunk + engine bay detail, decon, paint enhancement, professional 4-year ceramic on everything — glass, paint, PPF, wheels, jambs, engine bay, carbon fiber, trim.", alt: "Detailed frunk and engine bay of a 2025 Corvette C8 Z06", categories: ["Ceramic", "Detailing"] },
   { photo: "jeep-gladiator", title: "Jeep Gladiator", caption: "Detailed wash, mechanical + chemical decon, 6-month ceramic sealant.", alt: "Grey Jeep Gladiator after wash, decontamination and ceramic sealant", categories: ["Detailing", "Ceramic"] },
   { photo: "ford-explorer", title: "2021 Ford Explorer", caption: "Full exterior detail, paint decon, 6–9 month sealant.", alt: "Grey 2021 Ford Explorer after a full exterior detail", categories: ["Detailing"] },
-  { art: "underglow", title: "2025 C8 Z06 — underglow install", caption: "Hidden-wiring underglow install: harness re-run and extended so the cutoff switch sits inside — nothing exposed at the battery. (Illustration — ask Mike to see the real thing.)", alt: "Illustration of a sports car with glowing cyan-to-magenta underglow", categories: ["Lighting"] },
+  { photo: "tnb-van-fleet", title: "T.N. Bowes Heating & Air — service van", caption: "Fleet work: bubble-free window tint on a Ford Transit service van.", alt: "Red T.N. Bowes Heating & Air Conditioning Ford Transit van under the hexagon LED ceiling", categories: ["Fleet"] },
   { photo: "z06-foam-wash", title: "2025 C8 Z06 — the wash", caption: "Foam first, always. Every detail starts with a detailed wash.", alt: "Corvette Z06 covered in thick foam during a detailed wash", categories: ["Detailing"] },
   { photo: "chevy-trax", title: "2025 Chevy Trax", caption: "Polish + ceramic coating.", alt: "Silver 2025 Chevy Trax after polish and ceramic coating", categories: ["Ceramic"] },
   { photo: "toyota-tacoma", title: "Toyota Tacoma", caption: "Exterior detail.", alt: "Black Toyota Tacoma after an exterior detail", categories: ["Detailing"] },
   { photo: "shop-hex-bay", title: "The new shop", caption: "The hex-lit bay at 26005 Point Lookout Rd — where the audio demos and the gloss happen.", alt: "Black supercar with doors open under the hexagon LED ceiling of the new Leonardtown shop", categories: ["Lighting", "Audio"] },
+  { photo: "chevelle-71-rear", title: "'71 Chevelle SS — rear", caption: "Ceramic coating. The gloss holds from every angle.", alt: "Rear three-quarter view of a burgundy 1971 Chevelle SS with chrome bumper and wheels under the hexagon LED ceiling", categories: ["Ceramic"] },
+  { photo: "c6-corvette-flag", title: "C6 Corvette — reflections", caption: "Full exterior detail — clear enough to read the flag in the paint.", alt: "The American flag on the shop wall reflected in the glossy red fender of a C6 Corvette", categories: ["Detailing"] },
+  { photo: "c6-corvette-interior", title: "C6 Corvette — interior", caption: "Full interior detail — the inside gets the same attention.", alt: "Clean black leather interior of a red C6 Corvette seen through the open driver's door", categories: ["Detailing"] },
   { photo: "mike-pressure-wash", title: "On the job", caption: "Real person, real work.", alt: "Mike pressure-washing a car, wearing a Mike's Automotive Detailing IGL shirt", categories: ["Detailing"] },
 ];
+
+/* ──────────────────────────────── Videos ─────────────────────────────────── */
+// Clips live in public/videos/<slug>.mp4 with a poster at public/videos/<slug>.webp.
+// `sound: true` = tap to play with sound. `sound: false` = plays muted on a loop when on screen.
+export type VideoSlug = "tnb-tint-a1" | "water-beading-sealant" | "lowglow-ambient" | "lowglow-starlight";
+export type Video = { slug: VideoSlug; title: string; caption: string; label: string; width: number; height: number; sound: boolean };
+export const videos: Record<VideoSlug, Video> = {
+  "tnb-tint-a1": {
+    slug: "tnb-tint-a1",
+    title: "“My man Mike — A1.”",
+    caption: "The T.N. Bowes Heating & Air crew picking up their service van with fresh tint.",
+    label: "Video: a T.N. Bowes Heating & Air technician next to their red service van says “My man Mike, A1. Check out them tints, baby — woo!”",
+    width: 720,
+    height: 1280,
+    sound: true,
+  },
+  "water-beading-sealant": {
+    slug: "water-beading-sealant",
+    title: "Watch it bead.",
+    caption: "Rinse after a 3-month paint sealant — water beads up and sheets right off.",
+    label: "Video: pressure-washer rinse on a black Toyota hood under the hex lights; water beads and sheets off the sealed paint",
+    width: 720,
+    height: 896,
+    sound: false,
+  },
+  // LowGlow's own clips for the Lighting page examples (see lightingExamples). Not Mike's work: keep them out of galleryVideos.
+  "lowglow-ambient": {
+    slug: "lowglow-ambient",
+    title: "Interior ambient lighting",
+    caption: "LowGlow ambient lighting kit.",
+    label: "Video: LowGlow ambient lighting kit cycling rainbow colors across a car's dash, doors and center console",
+    width: 606,
+    height: 1080,
+    sound: false,
+  },
+  "lowglow-starlight": {
+    slug: "lowglow-starlight",
+    title: "Starlight headliner",
+    caption: "LowGlow starlight headliner kit.",
+    label: "Video: LowGlow starlight headliner shimmering in shifting colors on a car ceiling at night",
+    width: 720,
+    height: 1280,
+    sound: false,
+  },
+};
+/** Clips shown in the gallery's "On video" row, in order. Add Mike-at-work clips here. */
+export const galleryVideos: VideoSlug[] = ["tnb-tint-a1", "water-beading-sealant"];
+
+/* ──────────────────────────────── Audio brands ───────────────────────────── */
+// Official logos in public/images/brands (shown flat white). width/height = the file's proportions.
+// No `file` → the name is shown as text until we have the official logo. `scale` nudges a logo's size by eye (1 = default).
+export const audioBrands: { name: string; file?: string; width: number; height: number; scale?: number }[] = [
+  { name: "Skar Audio", file: "skar.svg", width: 1991, height: 606 },
+  { name: "Focal", file: "focal.svg", width: 284, height: 59 },
+  { name: "Memphis Car Audio", file: "memphis.png", width: 640, height: 93 },
+  { name: "Sundown Audio", file: "sundown.png", width: 640, height: 172 },
+  { name: "JL Audio", file: "jl-audio.png", width: 600, height: 565, scale: 0.95 },
+  { name: "Rockford Fosgate", file: "rockford-fosgate.svg", width: 183, height: 31 },
+  { name: "AudioControl", file: "audiocontrol.svg", width: 257, height: 21 },
+];
+
+/* ─────────────────────────────── Refer a friend ──────────────────────────── */
+// Customers make a personal link on /refer. When a friend opens it, the friend's quote
+// request arrives with "Referred by: <name>", so Mike knows who to thank.
+export const referral = {
+  forYou: "10% off your next service", // Mike (Nov 2026): 10% off for both people
+  forFriend: "10% off their first service",
+  terms:
+    "Reward applies after your friend's first paid service. New customers only. One reward per new customer. Rewards can't be exchanged for cash or combined with other offers.", // [CONFIRM]
+};
+
+/* ──────────────────────────────── Gift cards ─────────────────────────────── */
+// Fill in whichever Mike sets up. Until then, "Text Mike to order" is always there.
+//  • squareUrl – Square eGift Card page (Square Dashboard → Gift Cards → eGift cards). Buyers pay by card,
+//    the card is emailed/texted to the recipient and can be added to Apple Wallet.
+//  • venmo     – Venmo *Business* profile username (no @). Personal Venmo can't be used for business payments.
+//  • paypal    – PayPal.me username.
+export const giftCards = {
+  squareUrl: "", // [CONFIRM]
+  venmo: "", // [CONFIRM]
+  paypal: "MikesAutoCareService", // paypal.me/MikesAutoCareService (from Mike, Nov 2026)
+  amounts: [50, 100, 150, 250, 350],
+  terms: "Good toward any service at Mike's Automotive Detailing. No cash value. Treat it like cash — Mike can look up and reissue a lost certificate.", // [CONFIRM]
+};
 
 /* ──────────────────────── Lighting examples (LowGlow) ─────────────────────── */
 // Shown on /lighting until Mike has his own ambient + starlight install photos.
@@ -622,7 +739,6 @@ export type LightingExample = {
   title: string;
   body: string;
   video: VideoSlug;
-  videoLabel: string;
   photos: { slug: PhotoSlug; alt: string; position?: string }[];
   credit: string;
 };
@@ -636,7 +752,6 @@ export const lightingExamples: { show: boolean; note: string; items: LightingExa
       title: "Your dash, any color.",
       body: "Slim light strips follow the dash, doors and console, so the whole cabin glows. Keep it subtle and factory-looking with one color, or run custom modes through every color. Your call.",
       video: "lowglow-ambient",
-      videoLabel: "LowGlow ambient lighting kit cycling rainbow colors across a car's dash, doors and center console",
       photos: [
         { slug: "lowglow-ambient-rainbow", alt: "Car interior at night with multicolor ambient light strips along the dash, doors and center console", position: "50% 55%" },
         { slug: "lowglow-ambient-green", alt: "Convertible interior lit with green and pink ambient light strips", position: "50% 55%" },
@@ -650,7 +765,6 @@ export const lightingExamples: { show: boolean; note: string; items: LightingExa
       title: "The night sky, inside.",
       body: "Hundreds of fiber-optic stars are set into your headliner by hand. Pick a color, add twinkle and color-chasing animations, even a custom logo in the stars, with no wires or projectors in sight.",
       video: "lowglow-starlight",
-      videoLabel: "LowGlow starlight headliner shimmering in shifting colors on a car ceiling at night",
       photos: [
         { slug: "lowglow-starlight-red", alt: "Car interior with a purple starlight headliner above a red-lit dash and steering wheel", position: "50% 30%" },
         { slug: "lowglow-starlight-seats", alt: "Open door view of bucket seats under a white starlight headliner", position: "50% 40%" },
@@ -664,7 +778,7 @@ export const lightingExamples: { show: boolean; note: string; items: LightingExa
 /* ─────────────────────────────── General FAQ ─────────────────────────────── */
 const travelAnswer =
   business.offersMobileService === true
-    ? "Yes — we will travel! Call or text to set up on-site service anywhere in Southern Maryland."
+    ? "Yes — mobile service is available anywhere in Southern Maryland for an added travel fee. During the cold season, all work is done at the shop on Point Lookout Rd. Call or text to set it up."
     : business.offersMobileService === false
       ? "Our work is done at the new shop on Point Lookout Rd, where we have the lighting, power and space to do it right."
       : "Most work happens at the new shop on Point Lookout Rd. Need on-site service? Call or text Mike and ask — he's covered all of Southern Maryland.";
@@ -682,12 +796,18 @@ export const faqs: { q: string; a: string }[] = [
   services[6].faqs[0],
   {
     q: "Where are you, and what are your hours?",
-    a: "26005 Point Lookout Rd, Leonardtown, MD 20650 — look for our sign on the road board. Mon–Fri 7:00 AM–6:00 PM, Saturday 9:00 AM–3:00 PM, closed Sunday. Stop by any time we're open — we love when customers come in and chat.",
+    a: "26005 Point Lookout Rd, Leonardtown, MD 20650 — look for our sign on the road board. Mon–Fri 8:00 AM–8:00 PM (closed 11:00 AM–2:00 PM for a midday break), Saturday 9:00 AM–3:00 PM, closed Sunday. Stop by any time we're open — we love when customers come in and chat.",
   },
   { q: "Do you travel?", a: travelAnswer },
 ];
 
 /* ──────────────────────────────── Navigation ─────────────────────────────── */
+/** Extra footer links. */
+export const footerExtras = [
+  { label: "Refer a Friend", href: "/refer" },
+  { label: "Gift Cards", href: "/gift-cards" },
+];
+
 export const nav = [
   { label: "Gallery", href: "/gallery" },
   { label: "Reviews", href: "/reviews" },

@@ -2,7 +2,7 @@
 //
 //   npm run images            (everything)
 //   npm run images -- --logo-only
-//   npm run images:lowglow    (only the LowGlow example photos + videos; keeps everything else as-is)
+//   npm run images:lowglow    (only the LowGlow example photos + clips; needs ffmpeg)
 //
 // Input:  .raw-photos/*.jpg   (originals from Google Drive — gitignored, never served)
 // Output: public/images/site/<slug>-<width>.{avif,webp}
@@ -63,10 +63,38 @@ const PHOTOS = [
   { slug: "toyota-tacoma", file: "12-toyota-tacoma-exterior-detail.jpg", crop: [0.05, 0, 0.665, 1] },
   { slug: "shop-hex-bay", file: "13-shop-interior-hex-lights-c8.jpg", rotate: -11, crop: [0.18, 0.12, 0.82, 0.86] },
   { slug: "shop-hex-ceiling", file: "13-shop-interior-hex-lights-c8.jpg", rotate: -11, crop: [0.24, 0.12, 0.82, 0.4] },
+  // Nov 2026 additions from Mike.
+  {
+    slug: "tnb-van-fleet",
+    file: "15-tnb-hvac-van-fleet.jpg",
+    blur: [[0.088, 0.684, 0.148, 0.73]],
+    crop: [0, 0.15, 1, 0.86],
+  },
+  { slug: "c8-underglow-bay", file: "16-c8-underglow-hex-bay.jpg", crop: [0.06, 0, 1, 0.58] },
+  { slug: "c6-corvette-flag", file: "17-c6-corvette-flag-reflection.jpg", crop: [0, 0.1, 1, 0.72] },
+  {
+    slug: "c6-corvette-bay",
+    file: "18-c6-corvette-hex-bay-front.jpg",
+    blur: [[0.765, 0.655, 0.852, 0.712]],
+    crop: [0, 0.14, 1, 0.76],
+  },
+  { slug: "c6-corvette-interior", file: "21-c6-corvette-interior.jpg", crop: [0, 0.12, 1, 0.88] },
+  {
+    slug: "chevelle-71-front",
+    file: "23-71-chevelle-front.jpg",
+    blur: [[0.902, 0.522, 0.972, 0.576]],
+    crop: [0.06, 0.13, 1, 0.63],
+  },
+  {
+    slug: "chevelle-71-rear",
+    file: "22-71-chevelle-rear.jpg",
+    blur: [[0.168, 0.622, 0.23, 0.672]],
+    crop: [0, 0, 1, 0.78],
+  },
 ];
 
-// LowGlow example media for the Lighting page — stand-ins until Mike has his own
-// ambient / starlight install photos. Pulled from LowGlow's public product pages
+// LowGlow example media for the Lighting page ("See it lit"): stand-ins until Mike has his
+// own ambient / starlight install photos. Pulled from LowGlow's public product pages
 // (lowglow.shop; Mike is a LowGlow Certified Dealer) and credited on the page.
 // Originals are cached in .raw-photos/lowglow/ (gitignored). Not graded: they're
 // already professionally shot. Swap or delete entries here when real photos arrive.
@@ -81,7 +109,8 @@ const LOWGLOW_PHOTOS = [
   { slug: "lowglow-starlight-pink", url: `${LOWGLOW_CDN}AMCJPHOTOS_JordanBRZ_NewWrap_02-26-2026-44.jpg` },
 ].map((p) => ({ ...p, file: `lowglow/${p.slug}.jpg`, crop: [0, 0, 1, 1], grade: false }));
 
-/** Short, silent, looping clips. `clips` are [start, end] seconds, joined in order. */
+/** Short, silent, looping clips → public/videos/<slug>.mp4 + .webp poster. `clips` are [start, end] seconds, joined in order.
+ *  Their width/height go in `videos` in content/site.ts. */
 const LOWGLOW_VIDEOS = [
   {
     slug: "lowglow-ambient",
@@ -100,7 +129,7 @@ const LOWGLOW_VIDEOS = [
     posterAt: 5,
   },
 ];
-const VIDEO_OUT = path.join(ROOT, "public/images/video");
+const VIDEO_OUT = path.join(ROOT, "public/videos");
 const VIDEO_MAX_W = 720;
 
 const px = (f, n) => Math.round(f * n);
@@ -119,12 +148,11 @@ async function fetchOnce(url, rel) {
   return dest;
 }
 
-/** Trim + re-encode a clip to a small, silent, fast-start H.264 MP4 plus a WebP poster (needs ffmpeg). */
-async function processVideo(v, videoManifest) {
+/** Trim + re-encode a clip to a small, silent, fast-start H.264 MP4 plus a WebP poster. */
+async function processVideo(v) {
   const src = await fetchOnce(v.url, `lowglow/${v.slug}.mp4`);
-  const probe = execFileSync("ffprobe", ["-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height", "-of", "csv=p=0", src]).toString().trim();
-  const [srcW] = probe.split(",").map(Number);
-  const scale = srcW > VIDEO_MAX_W ? `,scale=${VIDEO_MAX_W}:-2:flags=lanczos` : "";
+  const probe = execFileSync("ffprobe", ["-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width", "-of", "csv=p=0", src]).toString().trim();
+  const scale = Number(probe) > VIDEO_MAX_W ? `,scale=${VIDEO_MAX_W}:-2:flags=lanczos` : "";
   const parts = v.clips.map(([a, b], i) => `[0:v]trim=${a}:${b},setpts=PTS-STARTPTS[c${i}]`).join(";");
   const joined = v.clips.map((_, i) => `[c${i}]`).join("");
   const graph = `${parts};${joined}concat=n=${v.clips.length}:v=1:a=0,fps=30${scale}${v.filter}[v]`;
@@ -132,18 +160,10 @@ async function processVideo(v, videoManifest) {
   const mp4 = path.join(VIDEO_OUT, `${v.slug}.mp4`);
   execFileSync("ffmpeg", ["-v", "error", "-y", "-i", src, "-filter_complex", graph, "-map", "[v]", "-an", "-c:v", "libx264", "-preset", "slow", "-crf", String(v.crf), "-profile:v", "high", "-pix_fmt", "yuv420p", "-movflags", "+faststart", mp4]);
   const frame = execFileSync("ffmpeg", ["-v", "error", "-ss", String(v.posterAt), "-i", mp4, "-frames:v", "1", "-f", "image2pipe", "-vcodec", "png", "-"], { maxBuffer: 64 * 1024 * 1024 });
-  await sharp(frame).webp({ quality: 70 }).toFile(path.join(VIDEO_OUT, `${v.slug}-poster.webp`));
-  const out = execFileSync("ffprobe", ["-v", "error", "-show_entries", "stream=width,height:format=duration", "-of", "json", mp4]).toString();
-  const { streams, format } = JSON.parse(out);
-  videoManifest[v.slug] = {
-    src: `/images/video/${v.slug}.mp4`,
-    poster: `/images/video/${v.slug}-poster.webp`,
-    width: streams[0].width,
-    height: streams[0].height,
-    duration: Math.round(Number(format.duration) * 10) / 10,
-  };
+  await sharp(frame).webp({ quality: 70 }).toFile(path.join(VIDEO_OUT, `${v.slug}.webp`));
+  const dims = execFileSync("ffprobe", ["-v", "error", "-show_entries", "stream=width,height", "-of", "csv=p=0:s=x", mp4]).toString().trim();
   const kb = Math.round((await fs.stat(mp4)).size / 1024);
-  console.log(`✓ video ${v.slug} ${streams[0].width}x${streams[0].height} ${format.duration}s ${kb} KB`);
+  console.log(`✓ video ${v.slug} ${dims} ${kb} KB (put ${dims} in videos in content/site.ts)`);
 }
 
 /** Pixelate + blur a box so nothing is readable. */
@@ -275,34 +295,49 @@ async function processLogo() {
   console.log("✓ logo + icons");
 }
 
-await fs.mkdir(OUT, { recursive: true });
-const GENERATED = path.join(ROOT, "content/images.generated.ts");
-const lowglowOnly = process.argv.includes("--lowglow-only");
-let manifest = {};
-let videoManifest = {};
-if (lowglowOnly) {
-  // Keep every other photo's entry exactly as it is; only (re)build the LowGlow media.
-  const prev = await fs.readFile(GENERATED, "utf8");
-  manifest = JSON.parse(prev.match(/PHOTOS: Record<PhotoSlug, PhotoMeta> = (\{[\s\S]*?\n\});/)[1]);
-} else {
-  await processLogo();
-  if (process.argv.includes("--logo-only")) process.exit(0);
-  for (const p of PHOTOS) await processPhoto(p, manifest);
+const exists = (f) => fs.access(path.join(RAW, f)).then(() => true, () => false);
+
+/** Entries already in content/images.generated.ts, so photos whose original isn't on this machine are kept as-is. */
+async function existingManifest() {
+  try {
+    const src = await fs.readFile(path.join(ROOT, "content/images.generated.ts"), "utf8");
+    const start = src.indexOf("{", src.indexOf("export const PHOTOS"));
+    const body = src.slice(start, src.lastIndexOf("};") + 1);
+    return JSON.parse(body);
+  } catch {
+    return {};
+  }
 }
+
+await fs.mkdir(OUT, { recursive: true });
+const manifest = await existingManifest();
+const lowglowOnly = process.argv.includes("--lowglow-only");
+if (!lowglowOnly) {
+  if (await exists("01-logo-mikes-automotive-detailing.jpg")) await processLogo();
+  else console.log("… logo original not found, keeping current logo files");
+  if (process.argv.includes("--logo-only")) process.exit(0);
+}
+const fresh = {};
+if (!lowglowOnly)
+  for (const p of PHOTOS) {
+    if (await exists(p.file)) await processPhoto(p, fresh);
+    else if (manifest[p.slug]) console.log(`… ${p.slug}: original not found, keeping current files`);
+    else throw new Error(`Missing ${p.file} and no existing output for ${p.slug}`);
+  }
 for (const p of LOWGLOW_PHOTOS) {
   await fetchOnce(p.url, p.file);
-  await processPhoto(p, manifest);
+  await processPhoto(p, fresh);
 }
-for (const v of LOWGLOW_VIDEOS) await processVideo(v, videoManifest);
+for (const v of LOWGLOW_VIDEOS) await processVideo(v);
+// Keep PHOTOS order; drop entries no longer listed.
+const merged = Object.fromEntries([...PHOTOS, ...LOWGLOW_PHOTOS].map((p) => [p.slug, fresh[p.slug] ?? manifest[p.slug]]));
+Object.keys(manifest).forEach((k) => delete manifest[k]);
+Object.assign(manifest, merged);
 
 const ts = `// AUTO-GENERATED by scripts/process-images.mjs — do not edit by hand.
 export type PhotoSlug = ${Object.keys(manifest).map((k) => JSON.stringify(k)).join(" | ")};
 export type PhotoMeta = { width: number; height: number; widths: number[]; blurDataURL: string };
 export const PHOTOS: Record<PhotoSlug, PhotoMeta> = ${JSON.stringify(manifest, null, 2)};
-
-export type VideoSlug = ${Object.keys(videoManifest).map((k) => JSON.stringify(k)).join(" | ")};
-export type VideoMeta = { src: string; poster: string; width: number; height: number; duration: number };
-export const VIDEOS: Record<VideoSlug, VideoMeta> = ${JSON.stringify(videoManifest, null, 2)};
 `;
-await fs.writeFile(GENERATED, ts);
+await fs.writeFile(path.join(ROOT, "content/images.generated.ts"), ts);
 console.log("✓ content/images.generated.ts");

@@ -1,22 +1,21 @@
 import { lightingExamples, links, type LightingExample } from "@/content/site";
-import { PHOTOS, VIDEOS } from "@/content/images.generated";
+import { PHOTOS } from "@/content/images.generated";
 import { cn } from "@/lib/cn";
-import { LoopVideo } from "../fx/LoopVideo";
 import { Photo } from "../Photo";
+import { VideoClip } from "../VideoClip";
 import { ChatIcon } from "../icons";
 import { Button, Container, SectionHead } from "../ui";
 
 const tile = "relative overflow-hidden rounded-3xl bg-jet ring-1 ring-white/10";
 
 function VideoTile({ item, className }: { item: LightingExample; className?: string }) {
-  const v = VIDEOS[item.video];
   return (
-    <figure className={cn(tile, "aspect-[9/16]", className)}>
-      <LoopVideo src={v.src} poster={v.poster} label={item.videoLabel} />
-      <figcaption className="pointer-events-none absolute top-3 left-3 hidden rounded-full whitespace-nowrap sm:block bg-black/55 px-3 py-1.5 text-xs font-extrabold tracking-wide text-white uppercase ring-1 ring-white/20 backdrop-blur-sm">
+    <div className={cn("relative", className)}>
+      <VideoClip slug={item.video} showCaption={false} className="[&>div]:!rounded-3xl [&>div]:!shadow-none [&>div]:ring-white/10" />
+      <p aria-hidden className="pointer-events-none absolute top-3 left-3 hidden rounded-full bg-black/55 px-3 py-1.5 text-xs font-extrabold tracking-wide whitespace-nowrap text-white uppercase ring-1 ring-white/20 backdrop-blur-sm sm:block">
         {item.eyebrow}
-      </figcaption>
-    </figure>
+      </p>
+    </div>
   );
 }
 
