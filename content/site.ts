@@ -647,7 +647,7 @@ export const gallery: GalleryItem[] = [
 /* ──────────────────────────────── Videos ─────────────────────────────────── */
 // Clips live in public/videos/<slug>.mp4 with a poster at public/videos/<slug>.webp.
 // `sound: true` = tap to play with sound. `sound: false` = plays muted on a loop when on screen.
-export type VideoSlug = "tnb-tint-a1" | "water-beading-sealant";
+export type VideoSlug = "tnb-tint-a1" | "water-beading-sealant" | "lowglow-ambient" | "lowglow-starlight";
 export type Video = { slug: VideoSlug; title: string; caption: string; label: string; width: number; height: number; sound: boolean };
 export const videos: Record<VideoSlug, Video> = {
   "tnb-tint-a1": {
@@ -666,6 +666,25 @@ export const videos: Record<VideoSlug, Video> = {
     label: "Video: pressure-washer rinse on a black Toyota hood under the hex lights; water beads and sheets off the sealed paint",
     width: 720,
     height: 896,
+    sound: false,
+  },
+  // LowGlow's own clips for the Lighting page examples (see lightingExamples). Not Mike's work: keep them out of galleryVideos.
+  "lowglow-ambient": {
+    slug: "lowglow-ambient",
+    title: "Interior ambient lighting",
+    caption: "LowGlow ambient lighting kit.",
+    label: "Video: LowGlow ambient lighting kit cycling rainbow colors across a car's dash, doors and center console",
+    width: 606,
+    height: 1080,
+    sound: false,
+  },
+  "lowglow-starlight": {
+    slug: "lowglow-starlight",
+    title: "Starlight headliner",
+    caption: "LowGlow starlight headliner kit.",
+    label: "Video: LowGlow starlight headliner shimmering in shifting colors on a car ceiling at night",
+    width: 720,
+    height: 1280,
     sound: false,
   },
 };
@@ -707,6 +726,53 @@ export const giftCards = {
   paypal: "MikesAutoCareService", // paypal.me/MikesAutoCareService (from Mike, Nov 2026)
   amounts: [50, 100, 150, 250, 350],
   terms: "Good toward any service at Mike's Automotive Detailing. No cash value. Treat it like cash — Mike can look up and reissue a lost certificate.", // [CONFIRM]
+};
+
+/* ──────────────────────── Lighting examples (LowGlow) ─────────────────────── */
+// Shown on /lighting until Mike has his own ambient + starlight install photos.
+// Photos and clips are LowGlow's own (lowglow.shop) and are credited on the page.
+// Kept OFF the gallery on purpose: the gallery is only Mike's own work.
+// When real photos arrive, swap them in here (or set `show: false` to hide the section).
+export type LightingExample = {
+  id: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  video: VideoSlug;
+  photos: { slug: PhotoSlug; alt: string; position?: string }[];
+  credit: string;
+};
+export const lightingExamples: { show: boolean; note: string; items: LightingExample[] } = {
+  show: true,
+  note: "These photos and clips come from LowGlow, the kits we install as a LowGlow Certified Dealer. Photos from our own bay are on the way.",
+  items: [
+    {
+      id: "ambient",
+      eyebrow: "Interior ambient lighting",
+      title: "Your dash, any color.",
+      body: "Slim light strips follow the dash, doors and console, so the whole cabin glows. Keep it subtle and factory-looking with one color, or run custom modes through every color. Your call.",
+      video: "lowglow-ambient",
+      photos: [
+        { slug: "lowglow-ambient-rainbow", alt: "Car interior at night with multicolor ambient light strips along the dash, doors and center console", position: "50% 55%" },
+        { slug: "lowglow-ambient-green", alt: "Convertible interior lit with green and pink ambient light strips", position: "50% 55%" },
+        { slug: "lowglow-ambient-rear", alt: "View from the back seat of an SUV with ambient light strips glowing along the doors and dash", position: "50% 60%" },
+      ],
+      credit: "Photos & video: LowGlow",
+    },
+    {
+      id: "starlight",
+      eyebrow: "Starlight headliner",
+      title: "The night sky, inside.",
+      body: "Hundreds of fiber-optic stars are set into your headliner by hand. Pick a color, add twinkle and color-chasing animations, even a custom logo in the stars, with no wires or projectors in sight.",
+      video: "lowglow-starlight",
+      photos: [
+        { slug: "lowglow-starlight-red", alt: "Car interior with a purple starlight headliner above a red-lit dash and steering wheel", position: "50% 30%" },
+        { slug: "lowglow-starlight-seats", alt: "Open door view of bucket seats under a white starlight headliner", position: "50% 40%" },
+        { slug: "lowglow-starlight-pink", alt: "Close-up of a starlight headliner in pink, purple and teal points of light", position: "50% 35%" },
+      ],
+      credit: "Photos & video: LowGlow · AMCJ Photos",
+    },
+  ],
 };
 
 /* ─────────────────────────────── General FAQ ─────────────────────────────── */

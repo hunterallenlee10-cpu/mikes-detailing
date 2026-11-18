@@ -17,6 +17,7 @@ import { Equalizer } from "../fx/Equalizer";
 import { CeilingBackdrop } from "../hex/HexCeiling";
 import { VideoClip } from "../VideoClip";
 import { BrandStrip } from "./BrandStrip";
+import { LightingExamples } from "./LightingExamples";
 
 const QUOTE_PRESET: Record<ServiceSlug, string[]> = {
   "auto-detailing": ["Full Interior & Exterior Detail"],
@@ -153,6 +154,7 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
           </Container>
         </section>
       )}
+      {s.feature === "lights" && <LightingExamples />}
       {s.feature === "audio" && (
         <section className="relative py-20 sm:py-28" aria-labelledby="audio-title">
           <Container>
