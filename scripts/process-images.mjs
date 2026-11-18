@@ -2,6 +2,7 @@
 //
 //   npm run images            (everything)
 //   npm run images -- --logo-only
+//   npm run images:lowglow    (only the LowGlow example photos + videos; keeps everything else as-is)
 //
 // Input:  .raw-photos/*.jpg   (originals from Google Drive — gitignored, never served)
 // Output: public/images/site/<slug>-<width>.{avif,webp}
@@ -14,6 +15,7 @@
 import sharp from "sharp";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const RAW = path.join(ROOT, ".raw-photos");
@@ -63,7 +65,86 @@ const PHOTOS = [
   { slug: "shop-hex-ceiling", file: "13-shop-interior-hex-lights-c8.jpg", rotate: -11, crop: [0.24, 0.12, 0.82, 0.4] },
 ];
 
+// LowGlow example media for the Lighting page — stand-ins until Mike has his own
+// ambient / starlight install photos. Pulled from LowGlow's public product pages
+// (lowglow.shop; Mike is a LowGlow Certified Dealer) and credited on the page.
+// Originals are cached in .raw-photos/lowglow/ (gitignored). Not graded: they're
+// already professionally shot. Swap or delete entries here when real photos arrive.
+const LOWGLOW_CDN = "https://cdn.shopify.com/s/files/1/0540/6867/4745/files/";
+const LOWGLOW_VIDEO = "https://lowglow.shop/cdn/shop/videos/c/vp/";
+const LOWGLOW_PHOTOS = [
+  { slug: "lowglow-ambient-rainbow", url: `${LOWGLOW_CDN}lowglow-ambient-product-17.jpg` },
+  { slug: "lowglow-ambient-green", url: `${LOWGLOW_CDN}lowglow-ambient-product-3.jpg` },
+  { slug: "lowglow-ambient-rear", url: `${LOWGLOW_CDN}lowglow-ambient-product-34.jpg` },
+  { slug: "lowglow-starlight-red", url: `${LOWGLOW_CDN}AMCJPHOTOS_JordanBRZ_NewWrap_02-26-2026-58.jpg` },
+  { slug: "lowglow-starlight-seats", url: `${LOWGLOW_CDN}AMCJPHOTOS_JordanBRZ_NewWrap_02-26-2026-48.jpg` },
+  { slug: "lowglow-starlight-pink", url: `${LOWGLOW_CDN}AMCJPHOTOS_JordanBRZ_NewWrap_02-26-2026-44.jpg` },
+].map((p) => ({ ...p, file: `lowglow/${p.slug}.jpg`, crop: [0, 0, 1, 1], grade: false }));
+
+/** Short, silent, looping clips. `clips` are [start, end] seconds, joined in order. */
+const LOWGLOW_VIDEOS = [
+  {
+    slug: "lowglow-ambient",
+    url: `${LOWGLOW_VIDEO}5922be6f3ed94dbcb20da328d96c8099/5922be6f3ed94dbcb20da328d96c8099.HD-1080p-2.5Mbps-62755644.mp4`,
+    clips: [[7.4, 12.9], [17.4, 23.2]], // skips the blurry camera swings
+    filter: "",
+    crf: 24,
+    posterAt: 2,
+  },
+  {
+    slug: "lowglow-starlight",
+    url: `${LOWGLOW_VIDEO}1d72983e5aad43f795c3b8fde6ecebdc/1d72983e5aad43f795c3b8fde6ecebdc.HD-1080p-2.5Mbps-85879890.mp4`,
+    clips: [[1.5, 13.2]], // starts after the lights-off intro
+    filter: ",eq=gamma=1.12:saturation=1.08",
+    crf: 25,
+    posterAt: 5,
+  },
+];
+const VIDEO_OUT = path.join(ROOT, "public/images/video");
+const VIDEO_MAX_W = 720;
+
 const px = (f, n) => Math.round(f * n);
+
+/** Download a remote original once into .raw-photos/ (cache). */
+async function fetchOnce(url, rel) {
+  const dest = path.join(RAW, rel);
+  try {
+    await fs.access(dest);
+    return dest;
+  } catch {}
+  await fs.mkdir(path.dirname(dest), { recursive: true });
+  const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (site image pipeline)" } });
+  if (!res.ok) throw new Error(`Download failed (${res.status}): ${url}`);
+  await fs.writeFile(dest, Buffer.from(await res.arrayBuffer()));
+  return dest;
+}
+
+/** Trim + re-encode a clip to a small, silent, fast-start H.264 MP4 plus a WebP poster (needs ffmpeg). */
+async function processVideo(v, videoManifest) {
+  const src = await fetchOnce(v.url, `lowglow/${v.slug}.mp4`);
+  const probe = execFileSync("ffprobe", ["-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height", "-of", "csv=p=0", src]).toString().trim();
+  const [srcW] = probe.split(",").map(Number);
+  const scale = srcW > VIDEO_MAX_W ? `,scale=${VIDEO_MAX_W}:-2:flags=lanczos` : "";
+  const parts = v.clips.map(([a, b], i) => `[0:v]trim=${a}:${b},setpts=PTS-STARTPTS[c${i}]`).join(";");
+  const joined = v.clips.map((_, i) => `[c${i}]`).join("");
+  const graph = `${parts};${joined}concat=n=${v.clips.length}:v=1:a=0,fps=30${scale}${v.filter}[v]`;
+  await fs.mkdir(VIDEO_OUT, { recursive: true });
+  const mp4 = path.join(VIDEO_OUT, `${v.slug}.mp4`);
+  execFileSync("ffmpeg", ["-v", "error", "-y", "-i", src, "-filter_complex", graph, "-map", "[v]", "-an", "-c:v", "libx264", "-preset", "slow", "-crf", String(v.crf), "-profile:v", "high", "-pix_fmt", "yuv420p", "-movflags", "+faststart", mp4]);
+  const frame = execFileSync("ffmpeg", ["-v", "error", "-ss", String(v.posterAt), "-i", mp4, "-frames:v", "1", "-f", "image2pipe", "-vcodec", "png", "-"], { maxBuffer: 64 * 1024 * 1024 });
+  await sharp(frame).webp({ quality: 70 }).toFile(path.join(VIDEO_OUT, `${v.slug}-poster.webp`));
+  const out = execFileSync("ffprobe", ["-v", "error", "-show_entries", "stream=width,height:format=duration", "-of", "json", mp4]).toString();
+  const { streams, format } = JSON.parse(out);
+  videoManifest[v.slug] = {
+    src: `/images/video/${v.slug}.mp4`,
+    poster: `/images/video/${v.slug}-poster.webp`,
+    width: streams[0].width,
+    height: streams[0].height,
+    duration: Math.round(Number(format.duration) * 10) / 10,
+  };
+  const kb = Math.round((await fs.stat(mp4)).size / 1024);
+  console.log(`✓ video ${v.slug} ${streams[0].width}x${streams[0].height} ${format.duration}s ${kb} KB`);
+}
 
 /** Pixelate + blur a box so nothing is readable. */
 async function blurBoxes(buf, boxes) {
@@ -104,7 +185,8 @@ async function processPhoto(p, manifest) {
   const box = { left: px(x0, W), top: px(y0, H), width: px(x1 - x0, W), height: px(y1 - y0, H) };
   box.width = Math.min(box.width, W - box.left);
   box.height = Math.min(box.height, H - box.top);
-  const master = await grade(sharp(buf).extract(box)).toBuffer();
+  const cropped = sharp(buf).extract(box);
+  const master = await (p.grade === false ? cropped : grade(cropped)).toBuffer();
   const nativeW = box.width;
   const widths = [...new Set([...WIDTHS.filter((w) => w < nativeW), Math.min(nativeW, 1600)])].sort((a, b) => a - b);
   for (const w of widths) {
@@ -194,15 +276,33 @@ async function processLogo() {
 }
 
 await fs.mkdir(OUT, { recursive: true });
-const manifest = {};
-await processLogo();
-if (process.argv.includes("--logo-only")) process.exit(0);
-for (const p of PHOTOS) await processPhoto(p, manifest);
+const GENERATED = path.join(ROOT, "content/images.generated.ts");
+const lowglowOnly = process.argv.includes("--lowglow-only");
+let manifest = {};
+let videoManifest = {};
+if (lowglowOnly) {
+  // Keep every other photo's entry exactly as it is; only (re)build the LowGlow media.
+  const prev = await fs.readFile(GENERATED, "utf8");
+  manifest = JSON.parse(prev.match(/PHOTOS: Record<PhotoSlug, PhotoMeta> = (\{[\s\S]*?\n\});/)[1]);
+} else {
+  await processLogo();
+  if (process.argv.includes("--logo-only")) process.exit(0);
+  for (const p of PHOTOS) await processPhoto(p, manifest);
+}
+for (const p of LOWGLOW_PHOTOS) {
+  await fetchOnce(p.url, p.file);
+  await processPhoto(p, manifest);
+}
+for (const v of LOWGLOW_VIDEOS) await processVideo(v, videoManifest);
 
 const ts = `// AUTO-GENERATED by scripts/process-images.mjs — do not edit by hand.
 export type PhotoSlug = ${Object.keys(manifest).map((k) => JSON.stringify(k)).join(" | ")};
 export type PhotoMeta = { width: number; height: number; widths: number[]; blurDataURL: string };
 export const PHOTOS: Record<PhotoSlug, PhotoMeta> = ${JSON.stringify(manifest, null, 2)};
+
+export type VideoSlug = ${Object.keys(videoManifest).map((k) => JSON.stringify(k)).join(" | ")};
+export type VideoMeta = { src: string; poster: string; width: number; height: number; duration: number };
+export const VIDEOS: Record<VideoSlug, VideoMeta> = ${JSON.stringify(videoManifest, null, 2)};
 `;
-await fs.writeFile(path.join(ROOT, "content/images.generated.ts"), ts);
+await fs.writeFile(GENERATED, ts);
 console.log("✓ content/images.generated.ts");

@@ -78,6 +78,12 @@ How each Drive photo is used:
 | 05 | Ford Explorer | Auto Detailing hero, gallery, process step 3 (plate blurred) |
 | 06 | Z06 frunk/engine bay | Lighting hero, gallery |
 | 07 | LowGlow flyer | Reference only — rebuilt natively as the Lighting section. Its thumbnails were AI-style renders with baked-in labels, so they were not used. |
+
+**LowGlow example media (Lighting page → "See it lit").** Until Mike has his own ambient-lighting and starlight-headliner photos, the Lighting page shows 6 photos + 2 short silent clips from LowGlow's public product pages (lowglow.shop), credited on the page. They are deliberately **not** in the Gallery, which is only Mike's own work. The list of source URLs, crops and video trim points is `LOWGLOW_PHOTOS` / `LOWGLOW_VIDEOS` in `scripts/process-images.mjs`; the page text is `lightingExamples` in `content/site.ts` (set `show: false` to hide the section). Rebuild just that media (needs `ffmpeg`) with:
+
+```bash
+npm run images:lowglow
+```
 | 08 | Z06 foam | Process step 1, gallery (watermark cropped) |
 | 09 | Monte Carlo gloss | Gallery, process step 5 (watermark cropped) |
 | 10 | Mike pressure washing | About / Meet Mike, gallery (watermark cropped, background truck blurred) |

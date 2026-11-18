@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mts",
     "images": "node scripts/process-images.mjs",
+    "images:lowglow": "node scripts/process-images.mjs --lowglow-only",
     "map": "node scripts/build-map.mjs"
   },
   "dependencies": {
